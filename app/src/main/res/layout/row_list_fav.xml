@@ -7,7 +7,7 @@
     android:paddingTop="@dimen/list_vertical_margin">
 
     <ImageView
-        android:id="@+id/list_product_image"
+        android:id="@+id/fav_image"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_alignParentLeft="true"
@@ -16,52 +16,56 @@
         android:src="@drawable/ic_beverage" />
 
     <TextView
-        android:id="@+id/list_product_name"
+        android:id="@+id/fav_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@id/list_product_image"
+        android:layout_alignTop="@id/fav_image"
         android:layout_marginLeft="15dp"
-        android:layout_toRightOf="@id/list_product_image"
-        android:textStyle="bold"
-        android:text="@string/hello_world" />
+        android:layout_toRightOf="@id/fav_image"
+        android:text="@string/hello_world"
+        android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/list_product_brand"
+        android:id="@+id/fav_availability"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/list_product_name"
+        android:layout_below="@id/fav_name"
         android:layout_marginLeft="15dp"
         android:layout_marginTop="5dp"
-        android:layout_toRightOf="@id/list_product_image"
-        android:text="@string/hello_world" />
-    <TextView
-        android:id="@+id/list_product_type"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/list_product_brand"
-        android:layout_marginLeft="15dp"
-        android:layout_marginTop="5dp"
-        android:layout_toRightOf="@id/list_product_image"
-        android:text="@string/hello_world" />
+        android:layout_toRightOf="@id/fav_image"
+        android:text="Available in ParknShop" />
+
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/list_product_type"
+        android:layout_below="@id/fav_availability"
         android:layout_marginLeft="15dp"
         android:layout_marginTop="10dp"
-        android:layout_toRightOf="@id/list_product_image">
+        android:layout_toRightOf="@id/fav_image">
 
-        <ImageView
+        <TextView
+            android:id="@+id/fav_qty"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_money"
+            android:text="Qty: $1" />
+
+        <TextView
+            android:id="@+id/fav_unit_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:text="U/P: $1"
+
             />
 
         <TextView
-            android:id="@+id/list_best_price"
+            android:id="@+id/fav_subtotal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp" />
+            android:layout_marginLeft="10dp"
+            android:text="Subtotal: $1"
+
+            />
 
     </LinearLayout>
 </RelativeLayout>
