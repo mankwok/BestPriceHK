@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin">
+
+        <TextView
+            android:id="@+id/header_product_desc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/message_prod_info"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <View
+            style="@style/Divider"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp" />
+
+        <TextView
+            android:id="@+id/product_desc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/hello_world" />
+
+        <TextView
+            android:id="@+id/header_price_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:text="@string/label_problem_price"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+
+        <View
+            style="@style/Divider"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp" />
+
+        <Spinner
+            android:id="@+id/spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <RelativeLayout
+            android:id="@+id/bot_section"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp">
+
+            <TextView
+                android:id="@+id/header_message"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/header_message"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+
+            <View
+                android:id="@+id/divider"
+                style="@style/Divider"
+                android:layout_below="@id/header_message"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp" />
+
+            <EditText
+                android:id="@+id/message"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/divider"
+                android:background="@android:color/transparent"
+                android:gravity="start|top"
+                android:hint="@string/hint_share"
+                android:inputType="textMultiLine|textCapSentences"
+                android:minLines="5"
+                android:paddingBottom="20dp"
+                android:paddingTop="20dp"
+                android:scrollbars="vertical" />
+
+            <TextView
+                android:id="@+id/word_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/header_message"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:text="0"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+        </RelativeLayout>
+    </LinearLayout>
+</ScrollView>

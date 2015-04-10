@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Best Price HK</string>
+    <string name="app_label">Best Price HK</string>
+    <string name="api_key">AIzaSyBZoENXlPetKu6zJo4jOqdsa2ZQ7TTYNrE</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_search">Search</string>
+    <string name="hint_search">Search Products</string>
+    <string name="message_error">Error occurred. Please try again.</string>
+    <string name="action_settings">Settings</string>
+
+    <!-- Content Description -->
+    <string name="title_activity_map">Product Location</string>
+    <string name="title_activity_browse_type">Types</string>
+    <string name="title_activity_display_products">Display Products</string>
+    <string name="title_activity_display_product_info">Product Details</string>
+    <string name="title_activity_search">Search Result</string>
+    <string name="title_activity_favourites">Favourites</string>
+    <string name="title_activity_share">Share</string>
+    <string name="title_activity_settings">Settings</string>
+    <string name="title_activity_login">Login</string>
+    <string name="title_activity_register">Register</string>
+    <string name="title_activity_display_shares">View Shares</string>
+    <string name="label_my_shares">My Shares</string>
+    <string name="title_activity_report_problem">Report a Problem</string>
+
+
+    <!-- Product type -->
+    <string name="hint_any">Any</string>
+    <string name="all">All</string>
+    <string name="baby_care">Baby care</string>
+    <string name="beer">Beer</string>
+    <string name="beverages">Beverages</string>
+    <string name="biscuits">Biscuits</string>
+    <string name="bread">Bread</string>
+    <string name="cakes">Cakes</string>
+    <string name="dairy">Dairy</string>
+    <string name="household">Household</string>
+    <string name="milk_powder">Milk Powder</string>
+    <string name="noddles">Noodles</string>
+    <string name="oil">Oil</string>
+    <string name="rice">Rice</string>
+    <string name="snacks">Snacks</string>
+    <string name="wine">Wine</string>
+
+    <!-- Shop name -->
+    <string name="parknshop">ParknShop</string>
+    <string name="wellcome">Wellcome</string>
+    <string name="jusco">Jusco</string>
+    <string name="market_place">Market Place</string>
+
+    <!--AdvSearch fragment-->
+    <string name="label_keyword">Keyword</string>
+
+    <!-- Community Fragment-->
+    <string name="comm_fav">Most favourited : \n%s</string>
+    <string name="comm_share">Most shared: \n%s</string>
+    <string name="comm_usercount">Total users: %s</string>
+
+    <!-- DisplayProductInfo Activity -->
+    <string name="last_updated" >Last Updated: %s</string>
+    <string name="message_prod_info">Product\'s Information</string>
+    <string name="message_share">Price and Discount</string>
+    <string name="tv_price">Price: %s</string>
+    <string name="tv_discount">Discount: %s</string>
+    <string name="report">Report a Problem</string>
+    <string name="view_shares">View Shares</string>
+    <string name="please_login">Please login first.</string>
+    <string name="message_no_permission">In order to report problem, you need to be a gold member.</string>
+
+    <!-- DisplayShares Activity -->
+    <string name="no_shares">No shares found.</string>
+
+    <!-- Favourites Activity -->
+    <string name="message_remove_all">Remove all favourite product?</string>
+    <string name="removed_all">Removed all favourite products.</string>
+    <string name="total_price">Products have best price: %1$d out of %2$d. \nTotal Best Price: %3$.2f.</string>
+    <string name="pk_price">"ParknShop: $%1$.2f (%2$d)</string>
+    <string name="wellcome_price">Wellcome: $%1$.2f (%2$d)</string>
+    <string name="jusco_price">Jusco: $%1$.2f (%2$d)</string>
+    <string name="mp_price">Market Place: $%1$.2f (%2$d)</string>
+    <string name="store_message">Click the label to filter with store. Red label means you can\'t buy all products in that store.</string>
+
+    <!-- Home Fragment -->
+    <string name="message_welcome">Hi %1$s.\n\nWelcome to Best Price HK.\nThe best way to find bargain price.</string>
+    <string name="button_browse">Browse Products</string>
+
+    <!-- Login Activity -->
+    <string name="message_login">Logging in...</string>
+    <string name="message_wrong_pw">Invalid username or password.</string>
+    <string name="text_password">Password</string>
+    <string name="text_username">Username</string>
+    <string name="message_no_account">Don\'t have account? Register</string>
+
+    <!-- Main Activity -->
+    <string name="tv_location">Location: %s</string>
+    <!-- Main Activity -->
+    <string name="drawer_open">Slider Menu Opened</string>
+    <string name="drawer_close">Slider Menu Closed</string>
+    <!-- Nav Drawer Menu Items -->
+    <string-array name="nav_drawer_items">
+        <item>Home</item>
+        <item>Profile</item>
+        <item>Advanced Search</item>
+        <item>Communities</item>
+        <item>What\'s Hot</item>
+        <item>Settings</item>
+    </string-array>
+    <!-- Nav Drawer List Item Icons -->
+    <array name="nav_drawer_icons">
+        <item>@drawable/ic_home</item>
+        <item>@drawable/ic_profile</item>
+        <item>@drawable/ic_search</item>
+        <item>@drawable/ic_communities</item>
+        <item>@drawable/ic_whats_hot</item>
+        <item>@drawable/ic_settings</item>
+    </array>
+    <string name="desc_list_item_icon">Item Icon</string>
+
+    <!-- Profile fragment-->
+    <string name="message_fetch_info">Fetching user information...</string>
+    <string name="message_not_login">You have not logged in.\nClick here to login.</string>
+    <string name="button_logout">Log out</string>
+    <string name="gold_member">Gold Member</string>
+    <string name="silver_member">Silver Member</string>
+    <string name="normal_member">Normal Member</string>
+
+    <!-- Register Activity -->
+    <string name="reg_wrong_name">Username should be at least 5 to 10 characters (Whitespace excluded).</string>
+    <string name="reg_wrong_mail">Invalid Email address.</string>
+    <string name="reg_wrong_pw">Password should be at least 6 characters.</string>
+    <string name="hint_email">Email</string>
+    <string name="hint_username">At least 5 to 10 characters</string>
+    <string name="hint_password">At least 6 characters</string>
+    <string name="message_have_account">Have an account? Login</string>
+
+    <!-- Report Problem Activity -->
+    <string name="label_problem_price">Wrong Price or Discount</string>
+    <string name="reported">Problem reported</string>
+
+    <!-- Search Activity -->
+    <string name="label_search">"Searching for %1$s."</string>
+    <string name="label_search_in_store">"Searching for %1$s in %2$s."</string>
+    <string name="label_adv_search">"Searching for %1$s; Type: %2$s;\nStore: %3$s ; Best price range: From %4$s to %5$s."</string>
+    <string name="message_no_prod">No products found.</string>
+    <string name="message_shared">Product shared.</string>
+
+    <!--Share Activity-->
+    <string name="hint_share">Write something…</string>
+    <string name="header_message">Message</string>
+    <string name="share_limit">Message length is limited to 50 characters.</string>
+    <string name="action_send">Send</string>
+
+    <!-- Setting Activity -->
+    <string name="label_general">General</string>
+    <string name="clear_history">Clear Search History</string>
+    <string name="message_clear_history">This action cannot be undone. Do you want to continue?</string>
+    <string name="button_yes">Yes</string>
+    <string name="button_no">No</string>
+    <string name="title_activity_fav_products_location">Location</string>
+
+</resources>

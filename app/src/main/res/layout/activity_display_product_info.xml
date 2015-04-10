@@ -1,0 +1,304 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:id="@+id/top_section"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:paddingBottom="@dimen/activity_vertical_margin"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:paddingTop="@dimen/activity_vertical_margin">
+
+            <ImageView
+                android:id="@+id/productImg"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true" />
+
+            <TextView
+                android:id="@+id/productDescription"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:layout_toRightOf="@+id/productImg"
+                android:text="" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/social_section"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/top_section"
+            android:layout_centerHorizontal="true"
+            android:background="@color/light_indigo"
+            android:gravity="center"
+            android:padding="10dp">
+
+            <RelativeLayout
+                android:id="@+id/favourite"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:padding="5dp">
+
+                <ImageButton
+                    android:id="@+id/button_favourite"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_centerVertical="true"
+                    android:background="@xml/circle"
+                    android:src="@drawable/ic_favorite" />
+
+                <TextView
+                    android:id="@+id/count_favourite"
+                    style="@style/White_bold_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="5dp"
+                    android:layout_toEndOf="@+id/button_favourite"
+                    android:layout_toRightOf="@+id/button_favourite" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/share"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_toEndOf="@+id/favourite"
+                android:layout_toRightOf="@+id/favourite"
+                android:padding="5dp">
+
+                <ImageButton
+                    android:id="@+id/button_share"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_centerVertical="true"
+                    android:background="@xml/circle"
+                    android:src="@drawable/ic_share" />
+
+                <TextView
+                    android:id="@+id/count_share"
+                    style="@style/White_bold_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="5dp"
+                    android:layout_toEndOf="@+id/button_share"
+                    android:layout_toRightOf="@+id/button_share" />
+            </RelativeLayout>
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/price_section"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/social_section"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/activity_vertical_margin"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:paddingTop="@dimen/activity_vertical_margin">
+
+            <TextView
+                android:id="@+id/text_bot_section"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/message_share"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+            <View
+                android:id="@+id/divider"
+                style="@style/Divider"
+                android:layout_marginTop="5dp" />
+
+            <TextView
+                android:id="@+id/last_updated"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="5dp"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp">
+
+                <ImageButton
+                    android:id="@+id/pk_img"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:background="@android:color/transparent"
+                    android:onClick="browseStore"
+                    android:src="@drawable/ic_logo_parknshop" />
+
+                <TextView
+                    android:id="@+id/pk_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@id/pk_img"
+                    android:text="@string/parknshop"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/pk_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/pk_name"
+                    android:layout_toRightOf="@id/pk_img" />
+
+                <TextView
+                    android:id="@+id/pk_dicount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/pk_price"
+                    android:layout_toRightOf="@id/pk_img" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp">
+
+                <ImageButton
+                    android:id="@+id/wellcome_img"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:background="@android:color/transparent"
+                    android:onClick="browseStore"
+                    android:src="@drawable/ic_logo_wellcome" />
+
+                <TextView
+                    android:id="@+id/wellcome_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@id/wellcome_img"
+                    android:text="@string/wellcome"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/wellcome_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/wellcome_name"
+                    android:layout_toRightOf="@id/wellcome_img" />
+
+                <TextView
+                    android:id="@+id/wellcome_dicount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/wellcome_price"
+                    android:layout_toRightOf="@id/wellcome_img" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp">
+
+                <ImageButton
+                    android:id="@+id/jusco_img"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:background="@android:color/transparent"
+                    android:onClick="browseStore"
+                    android:src="@drawable/ic_logo_jusco" />
+
+                <TextView
+                    android:id="@+id/jusco_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@id/jusco_img"
+                    android:text="@string/jusco"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/jusco_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/jusco_name"
+                    android:layout_toRightOf="@id/jusco_img" />
+
+                <TextView
+                    android:id="@+id/jusco_dicount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/jusco_price"
+                    android:layout_toRightOf="@id/jusco_img" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp">
+
+                <ImageButton
+                    android:id="@+id/mp_img"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:background="@android:color/transparent"
+                    android:onClick="browseStore"
+                    android:src="@drawable/ic_logo_market" />
+
+                <TextView
+                    android:id="@+id/mp_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@id/mp_img"
+                    android:text="@string/market_place"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/mp_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/mp_name"
+                    android:layout_toRightOf="@id/mp_img" />
+
+                <TextView
+                    android:id="@+id/mp_dicount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/mp_price"
+                    android:layout_toRightOf="@id/mp_img" />
+
+            </RelativeLayout>
+
+            <Button
+                android:id="@+id/view_share"
+                style="@style/blue_button"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:onClick="viewShare"
+                android:text="@string/view_shares" />
+
+            <Button
+                android:id="@+id/view_review"
+                style="@style/orange_button"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:onClick="reportProblem"
+                android:text="@string/report" />
+        </LinearLayout>
+    </RelativeLayout>
+</ScrollView>

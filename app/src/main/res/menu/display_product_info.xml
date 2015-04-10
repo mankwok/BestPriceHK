@@ -1,0 +1,26 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.oufyp.bestpricehk.DisplayProductInfo" >
+    <item android:id="@+id/action_search"
+        android:title="Search"
+        android:showAsAction="ifRoom"
+        android:actionViewClass="android.widget.SearchView"
+        />
+    <item android:id="@+id/action_favourite"
+        android:title="Favourite"
+        android:icon="@drawable/ic_action_favourite"
+        android:showAsAction="ifRoom" />
+    <!-- showed when this product is favourited-->
+    <item android:id="@+id/action_remove_favourite"
+        android:title="Remove Favourite"
+        android:icon="@drawable/ic_action_remove_favourite"
+        android:showAsAction="ifRoom" />
+    <item android:id="@+id/action_share"
+    android:title="Share"
+    android:icon="@drawable/ic_action_share"
+    android:showAsAction="ifRoom" />
+    <item android:id="@+id/action_map"
+        android:title="Location"
+        android:icon="@drawable/ic_action_map"
+        android:showAsAction="ifRoom" />
+</menu>

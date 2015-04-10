@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+    android:title="@string/label_general"
+    android:key="pref_key_general_settings">
+    <Preference
+        android:key="clear_history"
+        android:title="@string/clear_history"
+        android:summary="Remove searches you have performed from this device"
+        android:selectable="true"/>
+    </PreferenceCategory>
+
+</PreferenceScreen>

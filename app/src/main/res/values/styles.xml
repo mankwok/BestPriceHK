@@ -1,0 +1,38 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="android:Theme.Holo.Light">
+        <!-- Customize your theme here.-->
+        <item name="android:homeAsUpIndicator">@drawable/ic_action_nav</item>
+        <item name="android:logo">@android:color/transparent</item>
+    </style>
+
+    <style name="Divider">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1dp</item>
+        <item name="android:background">?android:attr/listDivider</item>
+    </style>
+
+    <style name="White_bold_text">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:padding">5dp</item>
+    </style>
+
+    <style name="blue_button">
+        <item name="android:background">@xml/blue_button</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">#FFFFFF</item>
+    </style>
+
+    <style name="orange_button">
+        <item name="android:background">@xml/orange_button</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">#FFFFFF</item>
+    </style>
+    <style name="red_button" parent="orange_button">
+        <item name="android:background">#ff0000</item>
+]        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">#FFFFFF</item>
+    </style>
+</resources>

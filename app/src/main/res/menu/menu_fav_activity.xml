@@ -1,0 +1,31 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.oufyp.bestpricehk.DisplayProductInfo">
+    <item
+        android:id="@id/action_map"
+        android:icon="@drawable/ic_action_map"
+        android:showAsAction="ifRoom"
+        android:title="Map" />
+    <item
+        android:icon="@drawable/ic_action_sort"
+        android:showAsAction="ifRoom"
+        android:title="Sort">
+        <menu android:title="Sort">
+            <item
+                android:id="@+id/sort_by_brand"
+                android:title="By Brand" />
+            <item
+                android:id="@+id/sort_by_name"
+                android:title="By Name" />
+            <item
+                android:id="@+id/sort_by_type"
+                android:title="By Type" />
+            <item
+                android:id="@+id/sort_by_fav"
+                android:title="Most Favourite" />
+            <item
+                android:id="@+id/sort_by_share"
+                android:title="Most Share" />
+        </menu>
+    </item>
+</menu>
