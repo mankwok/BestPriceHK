@@ -36,11 +36,12 @@
         android:text="Available in ParknShop" />
 
     <LinearLayout
+        android:id="@+id/price_layout"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/fav_availability"
         android:layout_marginLeft="15dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="5dp"
         android:layout_toRightOf="@id/fav_image">
 
         <TextView
@@ -54,18 +55,23 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
-            android:text="U/P: $1"
-
-            />
+            android:text="U/P: $1" />
 
         <TextView
             android:id="@+id/fav_subtotal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
-            android:text="Subtotal: $1"
-
-            />
-
+            android:text="Subtotal: $1" />
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/fav_discount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/price_layout"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="5dp"
+        android:layout_toRightOf="@id/fav_image"
+        android:text="Discount: " />
 </RelativeLayout>
