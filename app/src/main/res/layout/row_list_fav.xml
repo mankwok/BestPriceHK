@@ -73,5 +73,5 @@
         android:layout_marginLeft="15dp"
         android:layout_marginTop="5dp"
         android:layout_toRightOf="@id/fav_image"
-        android:text="Discount:" />
+        android:text="Discount: " />
 </RelativeLayout>
