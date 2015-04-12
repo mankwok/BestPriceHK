@@ -4,11 +4,14 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -30,6 +33,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 
 
 public class FavouritesActivity extends Activity {
@@ -221,37 +225,62 @@ public class FavouritesActivity extends Activity {
                 productCounter[3]++;
             }
         }
-        View bestPricesView = getLayoutInflater().inflate(R.layout.view_best_price, null, false);
-        TextView tv = (TextView) bestPricesView.findViewById(R.id.best_price);
-        tv.setText(getString(R.string.total_price, totalBest, totalProduct, bestPrice));
-        tv = (TextView) bestPricesView.findViewById(R.id.pk_price);
-        tv.setText(getString(R.string.pk_price, storePrice[0], productCounter[0]));
-        tv = (TextView) bestPricesView.findViewById(R.id.wellcome_price);
-        tv.setText(getString(R.string.wellcome_price, storePrice[1], productCounter[1]));
-        tv = (TextView) bestPricesView.findViewById(R.id.jusco_price);
-        tv.setText(getString(R.string.jusco_price, storePrice[2], productCounter[2]));
-        tv = (TextView) bestPricesView.findViewById(R.id.mp_price);
-        tv.setText(getString(R.string.mp_price, storePrice[3], productCounter[3]));
-        checkStore(bestPricesView);
+        final View bestPricesView = getLayoutInflater().inflate(R.layout.view_best_price, null, false);
+        Spinner spinner = (Spinner) bestPricesView.findViewById(R.id.spinner);
+        List<String> shopOption = new ArrayList<>();
+        shopOption.add("Shop in ParknShop");
+        shopOption.add("Shop in Wellcome");
+        shopOption.add("Shop in Jusco");
+        shopOption.add("Shop in Market Place");
+        shopOption.add("Shop with best price");
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, shopOption);
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(dataAdapter);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                setPriceView(position, bestPricesView);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+        spinner.setSelection(4);
         lv.addHeaderView(bestPricesView, null, false);
     }
 
-    //change background colour to red when cannot buy all fav product in that shop
-    public void checkStore(View v) {
-        if (productCounter[0] < favList.size()) {
-            v.findViewById(R.id.pk_bg).setBackgroundColor(getResources().getColor(R.color.red));
+    public void setPriceView(int displayflag, View view) {
+        double price = 0.0;
+        TextView tv = (TextView) view.findViewById(R.id.total_price);
+        for (FavProduct favProduct : favList) {
+            favProduct.setDisplayFlag(displayflag);
+            price += favProduct.getSubTotal(displayflag);
+            Log.d("price",""+ favProduct.getSubTotal(displayflag));
+            adapter.notifyDataSetChanged();
         }
-        if (productCounter[1] < favList.size()) {
-            v.findViewById(R.id.we_bg).setBackgroundColor(getResources().getColor(R.color.red));
-        }
-        if (productCounter[2] < favList.size()) {
-            v.findViewById(R.id.ju_bg).setBackgroundColor(getResources().getColor(R.color.red));
-        }
-        if (productCounter[3] < favList.size()) {
-            v.findViewById(R.id.mp_bg).setBackgroundColor(getResources().getColor(R.color.red));
-
-        }
+        tv.setText(getString(R.string.fav_total_price, price));
     }
+    //change background colour to red when cannot buy all fav product in that shop
+
+    /**
+     * public void checkStore(View v) {
+     * if (productCounter[0] < favList.size()) {
+     * v.findViewById(R.id.pk_bg).setBackgroundColor(getResources().getColor(R.color.red));
+     * }
+     * if (productCounter[1] < favList.size()) {
+     * v.findViewById(R.id.we_bg).setBackgroundColor(getResources().getColor(R.color.red));
+     * }
+     * if (productCounter[2] < favList.size()) {
+     * v.findViewById(R.id.ju_bg).setBackgroundColor(getResources().getColor(R.color.red));
+     * }
+     * if (productCounter[3] < favList.size()) {
+     * v.findViewById(R.id.mp_bg).setBackgroundColor(getResources().getColor(R.color.red));
+     * <p/>
+     * }
+     * }
+     */
 
     public void setFilterList(FavProduct p, String[] price) {
         if (!price[0].equals("--")) {
@@ -268,19 +297,19 @@ public class FavouritesActivity extends Activity {
         }
     }
 
-    public void filter(View v) {
-        int id = v.getId();
-        if (id == R.id.pk_bg) {
-            adapter.setFavProducts(pkList);
-        } else if (id == R.id.we_bg) {
-            adapter.setFavProducts(weList);
-        } else if (id == R.id.ju_bg) {
-            adapter.setFavProducts(juList);
-        } else if (id == R.id.mp_bg) {
-            adapter.setFavProducts(mpList);
-        } else if (id == R.id.clear_filter) {
-            adapter.setFavProducts(favList);
-        }
-        adapter.notifyDataSetChanged();
-    }
+    /**public void filter(View v) {
+     int id = v.getId();
+     if (id == R.id.pk_bg) {
+     adapter.setFavProducts(pkList);
+     } else if (id == R.id.we_bg) {
+     adapter.setFavProducts(weList);
+     } else if (id == R.id.ju_bg) {
+     adapter.setFavProducts(juList);
+     } else if (id == R.id.mp_bg) {
+     adapter.setFavProducts(mpList);
+     } else if (id == R.id.clear_filter) {
+     adapter.setFavProducts(favList);
+     }
+     adapter.notifyDataSetChanged();
+     }*/
 }

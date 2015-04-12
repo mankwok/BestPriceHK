@@ -75,16 +75,15 @@ public class FavProductAdapter extends ArrayAdapter<FavProduct> {
         viewHolder.favImage.setImageResource(favProduct.getImage(favProduct.getType()));
         viewHolder.favName.setText(favProduct.getName());
         viewHolder.favAvailable.setText(available);
-        viewHolder.favQty.setText("Qty: " + favProduct.getQty());
+        viewHolder.favQty.setText(context.getString(R.string.fav_qty,favProduct.getQty()));
         if (unitPrice == 0.0) {
-            viewHolder.favUnitPrice.setText("U/P: --");
-            viewHolder.favSubtotal.setText("Subtotal: --");
+            viewHolder.favUnitPrice.setText(context.getString(R.string.fav_no_unit_price));
+            viewHolder.favSubtotal.setText(context.getString(R.string.fav_no_subtotal));
         } else {
-            viewHolder.favUnitPrice.setText("U/P: " + unitPrice);
-            viewHolder.favSubtotal.setText("Subtotal: " + subtotal);
+            viewHolder.favUnitPrice.setText(context.getString(R.string.fav_unit_price,unitPrice));
+            viewHolder.favSubtotal.setText(context.getString(R.string.fav_subtotal, subtotal));
         }
-        viewHolder.favQty.setText("Qty: " + favProduct.getQty());
-        viewHolder.favDiscount.setText("Discount: " + displayDiscount);
+        viewHolder.favDiscount.setText(context.getString(R.string.fav_discount,displayDiscount));
         return convertView;
     }
 

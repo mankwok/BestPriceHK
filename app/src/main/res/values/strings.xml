@@ -87,14 +87,21 @@
     <string name="wellcome_price">Wellcome: $%1$.2f (%2$d)</string>
     <string name="jusco_price">Jusco: $%1$.2f (%2$d)</string>
     <string name="mp_price">Market Place: $%1$.2f (%2$d)</string>
-    <string name="store_message">Click the label to filter with store. Red label means you can\'t buy all products in that store.</string>
+    <string name="fav_qty">"Qty: %1$d"</string>
+    <string name="fav_no_unit_price">U/P: —</string>
+    <string name="fav_no_subtotal">Subtotal: —</string>
+    <string name="fav_unit_price">U/P: $%1$.2f</string>
+    <string name="fav_subtotal">Subtotal: $%1$.2f</string>
+    <string name="fav_discount">"Discount: %1$s"</string>
+    <string name="fav_total_price">Total price: $%1$.2f</string>
+
 
     <!-- Home Fragment -->
     <string name="message_welcome">Hi %1$s.\n\nWelcome to Best Price HK.\nThe best way to find bargain price.</string>
     <string name="button_browse">Browse Products</string>
 
     <!-- Login Activity -->
-    <string name="message_login">Logging in...</string>
+    <string name="message_login">Logging in…</string>
     <string name="message_wrong_pw">Invalid username or password.</string>
     <string name="text_password">Password</string>
     <string name="text_username">Username</string>
@@ -126,7 +133,7 @@
     <string name="desc_list_item_icon">Item Icon</string>
 
     <!-- Profile fragment-->
-    <string name="message_fetch_info">Fetching user information...</string>
+    <string name="message_fetch_info">Fetching user information…</string>
     <string name="message_not_login">You have not logged in.\nClick here to login.</string>
     <string name="button_logout">Log out</string>
     <string name="gold_member">Gold Member</string>
@@ -166,5 +173,6 @@
     <string name="button_yes">Yes</string>
     <string name="button_no">No</string>
     <string name="title_activity_fav_products_location">Location</string>
+
 
 </resources>
