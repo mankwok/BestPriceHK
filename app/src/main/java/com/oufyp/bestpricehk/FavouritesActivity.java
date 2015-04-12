@@ -16,9 +16,10 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.oufyp.bestpricehk.adapter.ProductListAdapter;
+import com.oufyp.bestpricehk.adapter.FavProductAdapter;
 import com.oufyp.bestpricehk.app.AppController;
 import com.oufyp.bestpricehk.database.DatabaseHandler;
+import com.oufyp.bestpricehk.model.FavProduct;
 import com.oufyp.bestpricehk.model.Product;
 
 import org.json.JSONArray;
@@ -35,13 +36,13 @@ public class FavouritesActivity extends Activity {
     public static final String TAG = FavouritesActivity.class.getSimpleName();
     private Context mContext = this;
     private DatabaseHandler db;
-    private ArrayList<Product> favList = new ArrayList<>();
+    private ArrayList<FavProduct> favList = new ArrayList<>();
     //filter list
-    private ArrayList<Product> pkList = new ArrayList<>();
-    private ArrayList<Product> weList = new ArrayList<>();
-    private ArrayList<Product> juList = new ArrayList<>();
-    private ArrayList<Product> mpList = new ArrayList<>();
-    private ProductListAdapter adapter;
+    private ArrayList<FavProduct> pkList = new ArrayList<>();
+    private ArrayList<FavProduct> weList = new ArrayList<>();
+    private ArrayList<FavProduct> juList = new ArrayList<>();
+    private ArrayList<FavProduct> mpList = new ArrayList<>();
+    private FavProductAdapter adapter;
     private ListView lv;
     private View loadingView;
     private Boolean success = false;
@@ -57,16 +58,17 @@ public class FavouritesActivity extends Activity {
         setContentView(R.layout.activity_favourites);
         db = DatabaseHandler.getInstance(mContext);
         loadingView = getLayoutInflater().inflate(R.layout.loading, null, false);
-        adapter = new ProductListAdapter(mContext, favList);
+        adapter = new FavProductAdapter(mContext, favList);
         lv = (ListView) findViewById(android.R.id.list);
         lv.addFooterView(loadingView, null, false);
         lv.setAdapter(adapter);
         getFavProducts();
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Product aProduct = (Product) lv.getItemAtPosition(position);
+                FavProduct favProduct = (FavProduct) lv.getItemAtPosition(position);
                 Intent intent = new Intent(view.getContext(), DisplayProductInfo.class);
-                intent.putExtra("product", aProduct);
+                intent.putExtra("TAG", TAG);
+                intent.putExtra("PID", favProduct.getId());
                 startActivity(intent);
             }
         });
@@ -96,7 +98,7 @@ public class FavouritesActivity extends Activity {
             return true;
         } else if (id == R.id.sort_by_name) {
 
-            Collections.sort(adapter.getProductItems(), new Comparator<Product>() {
+            Collections.sort(adapter.getFavProducts(), new Comparator<Product>() {
                 public int compare(Product lhs, Product rhs) {
                     return (lhs.getName().compareTo(rhs.getName()));
                 }
@@ -104,7 +106,7 @@ public class FavouritesActivity extends Activity {
             adapter.notifyDataSetChanged();
             return true;
         } else if (id == R.id.sort_by_brand) {
-            Collections.sort(adapter.getProductItems(), new Comparator<Product>() {
+            Collections.sort(adapter.getFavProducts(), new Comparator<Product>() {
                 public int compare(Product lhs, Product rhs) {
                     return (lhs.getBrand().compareTo(rhs.getBrand()));
                 }
@@ -112,25 +114,9 @@ public class FavouritesActivity extends Activity {
             adapter.notifyDataSetChanged();
             return true;
         } else if (id == R.id.sort_by_type) {
-            Collections.sort(adapter.getProductItems(), new Comparator<Product>() {
+            Collections.sort(adapter.getFavProducts(), new Comparator<Product>() {
                 public int compare(Product lhs, Product rhs) {
                     return (lhs.getType().compareTo(rhs.getType()));
-                }
-            });
-            adapter.notifyDataSetChanged();
-            return true;
-        } else if (id == R.id.sort_by_share) {
-            Collections.sort(adapter.getProductItems(), new Comparator<Product>() {
-                public int compare(Product lhs, Product rhs) {
-                    return (rhs.getCountShare() - lhs.getCountShare());
-                }
-            });
-            adapter.notifyDataSetChanged();
-            return true;
-        } else if (id == R.id.sort_by_fav) {
-            Collections.sort(adapter.getProductItems(), new Comparator<Product>() {
-                public int compare(Product lhs, Product rhs) {
-                    return (rhs.getCountFav() - lhs.getCountFav());
                 }
             });
             adapter.notifyDataSetChanged();
@@ -143,7 +129,7 @@ public class FavouritesActivity extends Activity {
         HashMap<String, String> user = db.getUserDetails();
         String uid = user.get("uid");
         String url = String.format("http://101.78.220.131:8909/bestpricehk/fav_api/favlist.php?uid=%s", uid);
-        JsonObjectRequest jsObjRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+        final JsonObjectRequest jsObjRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject obj) {
                 try {
@@ -156,18 +142,22 @@ public class FavouritesActivity extends Activity {
                             String name = jsonObject.getString("name");
                             String type = jsonObject.getString("type");
                             String brand = jsonObject.getString("brand");
-                            int countFav = Integer.parseInt(jsonObject.getString("count_fav"));
-                            int countShare = Integer.parseInt(jsonObject.getString("count_share"));
+                            int qty = jsonObject.getInt("qty");
                             String[] price = {"--", "--", "--", "--"};
                             price[0] = jsonObject.getString("price1");
                             price[1] = jsonObject.getString("price2");
                             price[2] = jsonObject.getString("price3");
                             price[3] = jsonObject.getString("price4");
                             String bestPrice = jsonObject.getString("bestPrice");
-                            Product product = new Product(id, name, type, brand, countFav, countShare, bestPrice);
-                            product.setPrice(price);
-                            favList.add(product);
-                            setFilterList(product, price);
+                            String[] discount = {"--", "--", "--", "--"};
+                            discount[0] = jsonObject.getString("discount1");
+                            discount[1] = jsonObject.getString("discount2");
+                            discount[2] = jsonObject.getString("discount3");
+                            discount[3] = jsonObject.getString("discount4");
+                            FavProduct favProduct = new FavProduct(id, name, type, brand, qty, price, discount, bestPrice, 4);
+                            favProduct.setPrice(price);
+                            favList.add(favProduct);
+                            setFilterList(favProduct, price);
                         }
                     }
                 } catch (JSONException e) {
@@ -207,7 +197,7 @@ public class FavouritesActivity extends Activity {
         double bestPrice = 0.0;
         double[] storePrice = {0.0, 0.0, 0.0, 0.0};
 
-        for (Product p : favList) {
+        for (FavProduct p : favList) {
             String[] price = p.getPrice();
             if (!p.getBestPrice().equals("none")) {
                 totalBest++;
@@ -235,13 +225,13 @@ public class FavouritesActivity extends Activity {
         TextView tv = (TextView) bestPricesView.findViewById(R.id.best_price);
         tv.setText(getString(R.string.total_price, totalBest, totalProduct, bestPrice));
         tv = (TextView) bestPricesView.findViewById(R.id.pk_price);
-        tv.setText(getString(R.string.pk_price, storePrice[0],productCounter[0]));
+        tv.setText(getString(R.string.pk_price, storePrice[0], productCounter[0]));
         tv = (TextView) bestPricesView.findViewById(R.id.wellcome_price);
-        tv.setText(getString(R.string.wellcome_price, storePrice[1],productCounter[1]));
+        tv.setText(getString(R.string.wellcome_price, storePrice[1], productCounter[1]));
         tv = (TextView) bestPricesView.findViewById(R.id.jusco_price);
-        tv.setText(getString(R.string.jusco_price, storePrice[2],productCounter[2]));
+        tv.setText(getString(R.string.jusco_price, storePrice[2], productCounter[2]));
         tv = (TextView) bestPricesView.findViewById(R.id.mp_price);
-        tv.setText(getString(R.string.mp_price, storePrice[3],productCounter[3]));
+        tv.setText(getString(R.string.mp_price, storePrice[3], productCounter[3]));
         checkStore(bestPricesView);
         lv.addHeaderView(bestPricesView, null, false);
     }
@@ -263,7 +253,7 @@ public class FavouritesActivity extends Activity {
         }
     }
 
-    public void setFilterList(Product p, String[] price) {
+    public void setFilterList(FavProduct p, String[] price) {
         if (!price[0].equals("--")) {
             pkList.add(p);
         }
@@ -281,15 +271,15 @@ public class FavouritesActivity extends Activity {
     public void filter(View v) {
         int id = v.getId();
         if (id == R.id.pk_bg) {
-            adapter.setProductItems(pkList);
+            adapter.setFavProducts(pkList);
         } else if (id == R.id.we_bg) {
-            adapter.setProductItems(weList);
+            adapter.setFavProducts(weList);
         } else if (id == R.id.ju_bg) {
-            adapter.setProductItems(juList);
+            adapter.setFavProducts(juList);
         } else if (id == R.id.mp_bg) {
-            adapter.setProductItems(mpList);
+            adapter.setFavProducts(mpList);
         } else if (id == R.id.clear_filter) {
-            adapter.setProductItems(favList);
+            adapter.setFavProducts(favList);
         }
         adapter.notifyDataSetChanged();
     }

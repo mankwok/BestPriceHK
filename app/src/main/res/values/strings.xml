@@ -67,6 +67,14 @@
     <string name="view_shares">View Shares</string>
     <string name="please_login">Please login first.</string>
     <string name="message_no_permission">In order to report problem, you need to be a gold member.</string>
+    <array name="qty">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+    </array>
 
     <!-- DisplayShares Activity -->
     <string name="no_shares">No shares found.</string>

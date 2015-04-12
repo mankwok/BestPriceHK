@@ -1,15 +1,19 @@
 package com.oufyp.bestpricehk;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.SearchView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,7 +32,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class DisplayProductInfo extends Activity {
@@ -45,6 +51,7 @@ public class DisplayProductInfo extends Activity {
     private TextView countFav;
     private TextView countShare;
     private boolean success = false;
+    private String selectedQty = "1";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +59,7 @@ public class DisplayProductInfo extends Activity {
         setContentView(R.layout.loading);
         db = DatabaseHandler.getInstance(mContext);
         Intent intent = getIntent();
-        if (intent.getStringExtra("TAG") != null && (intent.getStringExtra("TAG").equals("DisplayShares") || intent.getStringExtra("TAG").equals("CommunityFragment"))) {
+        if (intent.getStringExtra("TAG") != null && (intent.getStringExtra("TAG").equals("FavouritesActivity") || intent.getStringExtra("TAG").equals("DisplayShares") || intent.getStringExtra("TAG").equals("CommunityFragment"))) {
             // handle the intent from DisplayShares activity and community fragment
             String pid = intent.getStringExtra("PID");
             product = new Product();
@@ -148,39 +155,6 @@ public class DisplayProductInfo extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
-    private class ResponseListener implements Response.Listener<JSONObject> {
-        @Override
-        public void onResponse(JSONObject obj) {
-            try {
-                success = obj.getBoolean("success");
-                if (success) {
-                    success = obj.getBoolean("success");
-                    JSONArray details = obj.getJSONArray("details");
-                    JSONObject c = details.getJSONObject(0);
-                    //saving price and discount
-                    price[0] = c.getString("price1");
-                    discount[0] = c.getString("discount1");
-                    price[1] = c.getString("price2");
-                    discount[1] = c.getString("discount2");
-                    price[2] = c.getString("price3");
-                    discount[2] = c.getString("discount3");
-                    price[3] = c.getString("price4");
-                    discount[3] = c.getString("discount4");
-                    product.setPrice(price);
-                    product.setDiscount(discount);
-                    lastDate = c.getString("dDate");
-                } else {
-                    //set default value to price and discount;
-                    product.setDiscount(discount);
-                    product.setPrice(price);
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            setPriceView(product);
-        }
-    }
-
     public void setPriceView(Product product) {
         String[] price = product.getPrice();
         String[] discount = product.getDiscount();
@@ -259,7 +233,6 @@ public class DisplayProductInfo extends Activity {
             Toast toast = Toast.makeText(mContext, text, Toast.LENGTH_SHORT);
             toast.show();
         } else {
-            db.addFavProduct(product);
             addFavToServer(product);
         }
         invalidateOptionsMenu();
@@ -277,43 +250,67 @@ public class DisplayProductInfo extends Activity {
         invalidateOptionsMenu();
     }
 
-    public void addFavToServer(Product product) {
-        String uid = uf.getUserID(mContext);
-        String url = "http://101.78.220.131:8909/bestpricehk/fav_api/favproducts.php";
-        Map<String, String> params = new HashMap<String, String>();
-        params.put("tag", "add");
-        params.put("uid", uid);
-        params.put("pid", product.getId());
-        CustomRequest request = new CustomRequest(Request.Method.POST, url, params, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject obj) {
-                try {
-                    success = obj.getBoolean("success");
-                    if (success) {
-                        CharSequence text = "Added to favourite list.";
-                        Toast toast = Toast.makeText(mContext, text, Toast.LENGTH_SHORT);
-                        toast.show();
-                    } else {
-                        Toast toast = Toast.makeText(mContext, "Cant add to favourite list", Toast.LENGTH_SHORT);
-                        toast.show();
+    public void addFavToServer(final Product product) {
+        final String uid = uf.getUserID(mContext);
+        final String url = "http://101.78.220.131:8909/bestpricehk/fav_api/favproducts.php";
+        List<String> qtyList = new ArrayList<>();
+        for (int i = 1; i <= 10; i++) {
+            qtyList.add("" + i);
+        }
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, qtyList);
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        final Spinner sp = new Spinner(this);
+        sp.setAdapter(dataAdapter);
+        new AlertDialog.Builder(this)
+                .setTitle("Add product to favourite list")
+                .setMessage("Select favourite product's quantity: ")
+                .setView(sp)
+                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        selectedQty = sp.getSelectedItem().toString();
+                        Map<String, String> params = new HashMap<>();
+                        params.put("tag", "add");
+                        params.put("uid", uid);
+                        params.put("pid", product.getId());
+                        params.put("qty", selectedQty);
+                        CustomRequest request = new CustomRequest(Request.Method.POST, url, params, new Response.Listener<JSONObject>() {
+                            @Override
+                            public void onResponse(JSONObject obj) {
+                                db.addFavProduct(product); // add to local database
+                                try {
+                                    success = obj.getBoolean("success");
+                                    if (success) {
+                                        CharSequence text = "Added to favourite list.";
+                                        Toast toast = Toast.makeText(mContext, text, Toast.LENGTH_SHORT);
+                                        toast.show();
+                                    } else {
+                                        Toast toast = Toast.makeText(mContext, "Cant add to favourite list", Toast.LENGTH_SHORT);
+                                        toast.show();
+                                    }
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }, new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                VolleyLog.d(TAG, "Error: " + error.getMessage());
+                            }
+                        });
+                        AppController.getInstance().addToRequestQueue(request);
                     }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                // Do nothing.
             }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                VolleyLog.d(TAG, "Error: " + error.getMessage());
-            }
-        });
-        AppController.getInstance().addToRequestQueue(request);
+        }).create().show();
+
     }
 
     public void delFavFromServer(Product product) {
         String uid = uf.getUserID(mContext);
         String url = "http://101.78.220.131:8909/bestpricehk/fav_api/favproducts.php";
-        Map<String, String> params = new HashMap<String, String>();
+        Map<String, String> params = new HashMap<>();
         params.put("tag", "delete");
         params.put("uid", uid);
         params.put("pid", product.getId());
@@ -366,6 +363,39 @@ public class DisplayProductInfo extends Activity {
             }
         } else {
             Toast.makeText(mContext, getString(R.string.please_login), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private class ResponseListener implements Response.Listener<JSONObject> {
+        @Override
+        public void onResponse(JSONObject obj) {
+            try {
+                success = obj.getBoolean("success");
+                if (success) {
+                    success = obj.getBoolean("success");
+                    JSONArray details = obj.getJSONArray("details");
+                    JSONObject c = details.getJSONObject(0);
+                    //saving price and discount
+                    price[0] = c.getString("price1");
+                    discount[0] = c.getString("discount1");
+                    price[1] = c.getString("price2");
+                    discount[1] = c.getString("discount2");
+                    price[2] = c.getString("price3");
+                    discount[2] = c.getString("discount3");
+                    price[3] = c.getString("price4");
+                    discount[3] = c.getString("discount4");
+                    product.setPrice(price);
+                    product.setDiscount(discount);
+                    lastDate = c.getString("dDate");
+                } else {
+                    //set default value to price and discount;
+                    product.setDiscount(discount);
+                    product.setPrice(price);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            setPriceView(product);
         }
     }
 

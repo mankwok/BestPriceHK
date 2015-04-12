@@ -14,8 +14,8 @@ public class Product implements Serializable {
     private String name;
     private String type;
     private String brand;
-    private String[] discount = new String[4];
     private String[] price = new String[4];
+    private String[] discount = new String[4];
     private int countFav;
     private int countShare;
     private String bestPrice;
@@ -29,6 +29,16 @@ public class Product implements Serializable {
         this.name = name;
         this.type = type;
         this.brand = brand;
+    }
+
+    public Product(String id, String name, String type, String brand, String[] price, String[] discount,String bestPrice) {
+        this.id = id;
+        this.name = name;
+        this.type = type;
+        this.brand = brand;
+        setPrice(price);
+        this.discount = discount;
+        setBestPrice(bestPrice);
     }
 
     public Product(String id, String name, String type, String brand, int countFav, int countShare, String bestPrice) {
@@ -165,11 +175,11 @@ public class Product implements Serializable {
         String[] price = this.getPrice();
         String bestPrice = this.getBestPrice();
         for (int index = 0; index < price.length; index++) {
-            if (price[index].equals(bestPrice)){
+            if (price[index].equals(bestPrice)) {
                 return index;
             }
         }
-        return -1;
+        return 0;
     }
 
 }
