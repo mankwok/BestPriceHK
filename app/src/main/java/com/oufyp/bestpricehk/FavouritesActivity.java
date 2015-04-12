@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -257,30 +256,10 @@ public class FavouritesActivity extends Activity {
         for (FavProduct favProduct : favList) {
             favProduct.setDisplayFlag(displayflag);
             price += favProduct.getSubTotal(displayflag);
-            Log.d("price",""+ favProduct.getSubTotal(displayflag));
             adapter.notifyDataSetChanged();
         }
         tv.setText(getString(R.string.fav_total_price, price));
     }
-    //change background colour to red when cannot buy all fav product in that shop
-
-    /**
-     * public void checkStore(View v) {
-     * if (productCounter[0] < favList.size()) {
-     * v.findViewById(R.id.pk_bg).setBackgroundColor(getResources().getColor(R.color.red));
-     * }
-     * if (productCounter[1] < favList.size()) {
-     * v.findViewById(R.id.we_bg).setBackgroundColor(getResources().getColor(R.color.red));
-     * }
-     * if (productCounter[2] < favList.size()) {
-     * v.findViewById(R.id.ju_bg).setBackgroundColor(getResources().getColor(R.color.red));
-     * }
-     * if (productCounter[3] < favList.size()) {
-     * v.findViewById(R.id.mp_bg).setBackgroundColor(getResources().getColor(R.color.red));
-     * <p/>
-     * }
-     * }
-     */
 
     public void setFilterList(FavProduct p, String[] price) {
         if (!price[0].equals("--")) {
@@ -297,19 +276,4 @@ public class FavouritesActivity extends Activity {
         }
     }
 
-    /**public void filter(View v) {
-     int id = v.getId();
-     if (id == R.id.pk_bg) {
-     adapter.setFavProducts(pkList);
-     } else if (id == R.id.we_bg) {
-     adapter.setFavProducts(weList);
-     } else if (id == R.id.ju_bg) {
-     adapter.setFavProducts(juList);
-     } else if (id == R.id.mp_bg) {
-     adapter.setFavProducts(mpList);
-     } else if (id == R.id.clear_filter) {
-     adapter.setFavProducts(favList);
-     }
-     adapter.notifyDataSetChanged();
-     }*/
 }

@@ -4,13 +4,8 @@
     android:layout_height="match_parent"
     android:gravity="center">
 
-    <ImageView
-        android:id="@+id/ic_info"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_info" />
-
     <TextView
+        android:drawableLeft="@drawable/ic_info"
         android:id="@+id/massage_not_login"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

@@ -43,10 +43,10 @@ public class AdvSearchFragment extends Fragment {
         storeSpinner = (Spinner) view.findViewById(R.id.store);
         startPriceET = (EditText) view.findViewById(R.id.start_price);
         endPriceET = (EditText) view.findViewById(R.id.end_price);
-        ArrayAdapter<String> typeDataAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, types);
+        ArrayAdapter<String> typeDataAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, types);
         typeDataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         typeSpinner.setAdapter(typeDataAdapter);
-        ArrayAdapter<String> storeDataAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, stores);
+        ArrayAdapter<String> storeDataAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, stores);
         storeDataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         storeSpinner.setAdapter(storeDataAdapter);
         searchBtn = (Button) view.findViewById(R.id.action_search);

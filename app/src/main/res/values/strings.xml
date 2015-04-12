@@ -7,7 +7,6 @@
     <string name="action_search">Search</string>
     <string name="hint_search">Search Products</string>
     <string name="message_error">Error occurred. Please try again.</string>
-    <string name="action_settings">Settings</string>
 
     <!-- Content Description -->
     <string name="title_activity_map">Product Location</string>
@@ -67,22 +66,11 @@
     <string name="view_shares">View Shares</string>
     <string name="please_login">Please login first.</string>
     <string name="message_no_permission">In order to report problem, you need to be a gold member.</string>
-    <array name="qty">
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
-        <item>4</item>
-        <item>5</item>
-        <item>6</item>
-    </array>
 
     <!-- DisplayShares Activity -->
     <string name="no_shares">No shares found.</string>
 
     <!-- Favourites Activity -->
-    <string name="message_remove_all">Remove all favourite product?</string>
-    <string name="removed_all">Removed all favourite products.</string>
-    <string name="total_price">Products have best price: %1$d out of %2$d. \nTotal Best Price: %3$.2f.</string>
     <string name="pk_price">"ParknShop: $%1$.2f (%2$d)</string>
     <string name="wellcome_price">Wellcome: $%1$.2f (%2$d)</string>
     <string name="jusco_price">Jusco: $%1$.2f (%2$d)</string>
@@ -109,9 +97,6 @@
 
     <!-- Main Activity -->
     <string name="tv_location">Location: %s</string>
-    <!-- Main Activity -->
-    <string name="drawer_open">Slider Menu Opened</string>
-    <string name="drawer_close">Slider Menu Closed</string>
     <!-- Nav Drawer Menu Items -->
     <string-array name="nav_drawer_items">
         <item>Home</item>

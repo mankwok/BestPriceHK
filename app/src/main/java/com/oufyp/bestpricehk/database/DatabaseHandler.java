@@ -80,13 +80,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.close(); // Closing database connection
     }
 
-    public ArrayList<Product> getFavPoducts() {
-        ArrayList<Product> productList = new ArrayList<Product>();
+    public ArrayList<Product> getFavProducts() {
+        ArrayList<Product> productList = new ArrayList<>();
         HashMap<String, String> user = this.getUserDetails();
         String uid = user.get("uid");
-        String selectQuery = "SELECT  * FROM " + TABLE_FAVPRODUCT + " WHERE " + KEY_UID + " = '" + uid + "'";
         SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery(selectQuery, null);
+        Cursor cursor = db.query(TABLE_FAVPRODUCT, null, " WHERE " + KEY_UID + " = '?'", new String[]{uid}, null, null, null);
         if (cursor.moveToFirst()) {
             do {
                 Product product = new Product();
@@ -98,6 +97,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 productList.add(product);
             } while (cursor.moveToNext());
         }
+        cursor.close();
         return productList;
     }
 
@@ -161,7 +161,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
      * Getting user data from database
      */
     public HashMap<String, String> getUserDetails() {
-        HashMap<String, String> user = new HashMap<String, String>();
+        HashMap<String, String> user = new HashMap<>();
         String selectQuery = "SELECT  * FROM " + TABLE_LOGIN;
 
         SQLiteDatabase db = this.getReadableDatabase();

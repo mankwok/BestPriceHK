@@ -5,7 +5,6 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -36,7 +35,7 @@ import java.util.Comparator;
 public class DisplayProducts extends Activity {
     public static final String TAG = DisplayProductInfo.class.getSimpleName();
     private Context mContext = this;
-    private ArrayList<Product> productsList = new ArrayList<Product>();
+    private ArrayList<Product> productsList = new ArrayList<>();
     private ListView lv;
     private View loadingView;
     private ProductListAdapter adapter;
