@@ -1,5 +1,7 @@
 package com.oufyp.bestpricehk.model;
 
+import android.util.Log;
+
 public class FavProduct extends Product {
     private int displayFlag;
     private int qty;
@@ -86,6 +88,24 @@ public class FavProduct extends Product {
     }
 
     public double getSubTotal(int displayFlag) {
+        String discount = this.getDisplayDiscount(displayFlag);
+        if(!discount.equals("--")){
+            try {
+                if (discount.contains("save")) {
+                    int qty = this.getQty();
+                    int saveQty = Integer.parseInt(discount.substring(discount.indexOf(" ")+ 1, discount.indexOf(" ", 5)));
+                    double savePrice = Double.parseDouble(discount.substring(discount.indexOf("$") + 1));
+                    return (getUnitPrice(displayFlag) * qty) - ((qty/saveQty)* savePrice);
+                }else if(discount.contains("at")){
+                    int qty = this.getQty();
+                    int saveQty = Integer.parseInt(discount.substring(discount.indexOf(" ")+ 1, discount.indexOf(" ", 5)));
+                    double savePrice = Double.parseDouble(discount.substring(discount.indexOf("$") + 1));
+                    return (getUnitPrice(displayFlag) * (qty % saveQty)) + ((qty/saveQty)* savePrice);
+                }
+            }catch (NumberFormatException ex){
+                return 0.0;
+            }
+        }
         return getUnitPrice(displayFlag) * getQty();
     }
 

@@ -12,7 +12,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -20,9 +19,9 @@ import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesClient;
 import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.google.android.gms.location.LocationClient;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -39,51 +38,27 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 
-public class FavProductsLocation extends Activity implements GooglePlayServicesClient.ConnectionCallbacks, GooglePlayServicesClient.OnConnectionFailedListener {
+public class FavProductsLocation extends Activity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
     public static final String TAG = MapActivity.class.getSimpleName();
     private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
     private static final int REQUEST_CODE_RECOVER_PLAY_SERVICES = 1000;
     private static final int MARKER_PK = R.drawable.marker_pk;
+    private int pinIcon = MARKER_PK;
     private static final int MARKER_WELLCOME = R.drawable.marker_wellcome;
     private static final int MARKER_JUSCO = R.drawable.marker_ju;
     private static final int MARKER_MP = R.drawable.marker_mp;
-    private LocationClient mLocationClient;
+    private GoogleApiClient mGoogleApiClient;
     private HashMap<String, String> pk;
     private HashMap<String, String> we;
     private HashMap<String, String> ju;
     private HashMap<String, String> mp;
-    private String[] price = {"--", "--", "--", "--"};
-    private String[] discount = {"--", "--", "--", "--"};
     private boolean firstTime = true;
     private GoogleMap map;
-    private int pinIcon = MARKER_PK;
-    private String store = "";
-    private HashMap<Marker, Store> markerStoreMap = new HashMap<>();
+    //private String[] price = {"--", "--", "--", "--"};
+    //private String[] discount = {"--", "--", "--", "--"};
+    //private String store = "";
+    //private HashMap<Marker, Store> markerStoreMap = new HashMap<>();
     private int storeType;
-
-
-    // Define a DialogFragment that displays the error dialog
-    public static class ErrorDialogFragment extends DialogFragment {
-        // Global field to contain the error dialog
-        private Dialog mDialog;
-
-        // Default constructor. Sets the dialog field to null
-        public ErrorDialogFragment() {
-            super();
-            mDialog = null;
-        }
-
-        // Set the dialog to display
-        public void setDialog(Dialog dialog) {
-            mDialog = dialog;
-        }
-
-        // Return a Dialog to the DialogFragment.
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            return mDialog;
-        }
-    }
 
     private boolean servicesConnected() {
         // Check that Google Play services is available
@@ -123,7 +98,11 @@ public class FavProductsLocation extends Activity implements GooglePlayServicesC
         mp = (HashMap<String, String>) intent.getSerializableExtra("MP");
 
         if (servicesConnected()) {
-            mLocationClient = new LocationClient(this, this, this);
+            mGoogleApiClient = new GoogleApiClient.Builder(this)
+                    .addConnectionCallbacks(this)
+                    .addOnConnectionFailedListener(this)
+                    .addApi(LocationServices.API)
+                    .build();
             // Get a handle to the Map Fragment
             map = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
             map.setMyLocationEnabled(true);
@@ -151,13 +130,13 @@ public class FavProductsLocation extends Activity implements GooglePlayServicesC
     @Override
     protected void onStart() {
         super.onStart();
-        mLocationClient.connect();
+        mGoogleApiClient.connect();
     }
 
     @Override
     protected void onStop() {
         // Disconnecting the client invalidates it.
-        mLocationClient.disconnect();
+        mGoogleApiClient.disconnect();
         super.onStop();
     }
 
@@ -179,17 +158,17 @@ public class FavProductsLocation extends Activity implements GooglePlayServicesC
 
     @Override
     public void onConnected(Bundle bundle) {
-        Location mCurrentLocation = mLocationClient.getLastLocation();
+        Location mCurrentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude()), 15));
         if (firstTime) {
-            showAllStore(mLocationClient.getLastLocation(), 500);
+            showAllStore(mCurrentLocation, 500);
             firstTime = false;
         }
     }
 
     @Override
-    public void onDisconnected() {
-        Toast.makeText(this, "Disconnected. Please re-connect.", Toast.LENGTH_SHORT).show();
+    public void onConnectionSuspended(int i) {
+        Log.i(TAG, "Location services suspended. Please reconnect.");
     }
 
     @Override
@@ -249,7 +228,6 @@ public class FavProductsLocation extends Activity implements GooglePlayServicesC
                         }
                         Store store = new Store(id, name, latLng, vicinity, storeType);
                         Marker m = placeMarker(store);
-                        markerStoreMap.put(m, store);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -320,6 +298,29 @@ public class FavProductsLocation extends Activity implements GooglePlayServicesC
             priceTV.setText(productList);
         }
         return view;
+    }
+
+    // Define a DialogFragment that displays the error dialog
+    public static class ErrorDialogFragment extends DialogFragment {
+        // Global field to contain the error dialog
+        private Dialog mDialog;
+
+        // Default constructor. Sets the dialog field to null
+        public ErrorDialogFragment() {
+            super();
+            mDialog = null;
+        }
+
+        // Set the dialog to display
+        public void setDialog(Dialog dialog) {
+            mDialog = dialog;
+        }
+
+        // Return a Dialog to the DialogFragment.
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            return mDialog;
+        }
     }
 
 }

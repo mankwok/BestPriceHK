@@ -101,51 +101,16 @@ public class DisplayProductInfo extends Activity {
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-        invalidateOptionsMenu();
         return true;
     }
 
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        if (db.isFavourited(product.getId())) {
-            menu.findItem(R.id.action_favourite).setVisible(false);
-
-        } else {
-            menu.findItem(R.id.action_remove_favourite).setVisible(false);
-        }
-        return super.onPrepareOptionsMenu(menu);
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        if (id == R.id.action_favourite) {
-            if (uf.isUserLoggedIn(mContext)) {
-                setFavourite(product);
-            } else {
-                Toast.makeText(mContext, "Please login first.", Toast.LENGTH_SHORT).show();
-            }
-            return true;
-        } else if (id == R.id.action_remove_favourite) {
-            if (uf.isUserLoggedIn(mContext)) {
-                removeFavourite(product);
-            } else {
-                Toast.makeText(mContext, "Please login first.", Toast.LENGTH_SHORT).show();
-            }
-            return true;
-        } else if (id == R.id.action_share) {
-            if (uf.isUserLoggedIn(mContext)) {
-                Intent intent = new Intent(this, ShareActivity.class);
-                intent.putExtra("PRODUCT", product);
-                startActivity(intent);
-            } else {
-                Toast.makeText(mContext, "Please login first.", Toast.LENGTH_SHORT).show();
-                return true;
-            }
-        } else if (id == R.id.action_map) {
+        if (item.getItemId() == R.id.action_map) {
             Intent intent = new Intent(this, MapActivity.class);
             intent.putExtra("PRODUCT", product);
             startActivity(intent);
@@ -153,6 +118,44 @@ public class DisplayProductInfo extends Activity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void socialBtnHandler(View v){
+        switch(v.getId()){
+            case R.id.button_favourite:
+                if (uf.isUserLoggedIn(mContext)) {
+                    if (db.isFavourited(product.getId())) {
+                        // remove favourite product
+                        new AlertDialog.Builder(this)
+                                .setTitle("Remove Favourite Product")
+                                .setMessage("Are you sure want to remove product in favourite list? ")
+                                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int whichButton) {
+                                        removeFavourite(product);
+                                    }
+                                }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                                // Do nothing.
+                            }
+                        }).create().show();
+                    }// add favourite product
+                    else {
+                        setFavourite(product);
+                    }
+                } // user is not logged in
+                else {
+                    Toast.makeText(mContext, "Please login first.", Toast.LENGTH_SHORT).show();
+                }
+                break;
+            case R.id.button_share:
+                if (uf.isUserLoggedIn(mContext)) {
+                    Intent intent = new Intent(this, ShareActivity.class);
+                    intent.putExtra("PRODUCT", product);
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(mContext, "Please login first.", Toast.LENGTH_SHORT).show();
+                }
+        }
     }
 
     public void setPriceView(Product product) {
@@ -235,7 +238,6 @@ public class DisplayProductInfo extends Activity {
         } else {
             addFavToServer(product);
         }
-        invalidateOptionsMenu();
     }
 
     public void removeFavourite(Product product) {
@@ -247,7 +249,6 @@ public class DisplayProductInfo extends Activity {
             Toast toast = Toast.makeText(mContext, text, Toast.LENGTH_SHORT);
             toast.show();
         }
-        invalidateOptionsMenu();
     }
 
     public void addFavToServer(final Product product) {

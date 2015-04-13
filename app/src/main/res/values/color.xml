@@ -6,6 +6,7 @@
     <color name="list_divider">#E0E0E0</color>
     <color name="green">#4CAF50</color>
     <color name="counter_text_color">#FFF</color>
+    <color name="black">#000000</color>
     <color name="teal">#009688</color>
     <color name="red">#F44336</color>
     <color name="grey">#9E9E9E</color>

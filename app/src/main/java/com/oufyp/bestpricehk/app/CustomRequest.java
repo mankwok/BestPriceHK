@@ -26,7 +26,7 @@ public class CustomRequest extends Request<JSONObject> {
 
     public CustomRequest(int method, String url, Map<String, String> params,
                          Listener<JSONObject> responseListener, ErrorListener errorListener) {
-        super(method, url, errorListener);
+        super(Method.POST, url, errorListener);
         this.listener = responseListener;
         this.params = params;
     }

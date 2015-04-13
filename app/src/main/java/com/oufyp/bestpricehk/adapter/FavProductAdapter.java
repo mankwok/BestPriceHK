@@ -74,7 +74,15 @@ public class FavProductAdapter extends ArrayAdapter<FavProduct> {
         }
         viewHolder.favImage.setImageResource(favProduct.getImage(favProduct.getType()));
         viewHolder.favName.setText(favProduct.getName());
-        viewHolder.favAvailable.setText(available);
+        if(available.contains("Not available")) {
+            viewHolder.favAvailable.setTextColor(context.getResources().getColor(R.color.red));
+            viewHolder.favAvailable.setText(available);
+
+        }else {
+            viewHolder.favAvailable.setTextColor(context.getResources().getColor(R.color.black));
+
+            viewHolder.favAvailable.setText(available);
+        }
         viewHolder.favQty.setText(context.getString(R.string.fav_qty,favProduct.getQty()));
         if (unitPrice == 0.0) {
             viewHolder.favUnitPrice.setText(context.getString(R.string.fav_no_unit_price));
