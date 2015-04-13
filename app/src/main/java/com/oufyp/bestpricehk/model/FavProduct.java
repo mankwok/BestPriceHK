@@ -2,6 +2,8 @@ package com.oufyp.bestpricehk.model;
 
 import android.util.Log;
 
+import com.oufyp.bestpricehk.R;
+
 public class FavProduct extends Product {
     private int displayFlag;
     private int qty;
@@ -116,6 +118,5 @@ public class FavProduct extends Product {
             return this.getDiscount()[this.getBestStore()];
         }
     }
-
 
 }

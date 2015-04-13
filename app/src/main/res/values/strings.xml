@@ -9,19 +9,20 @@
     <string name="message_error">Error occurred. Please try again.</string>
 
     <!-- Content Description -->
-    <string name="title_activity_map">Product Location</string>
     <string name="title_activity_browse_type">Types</string>
     <string name="title_activity_display_products">Display Products</string>
     <string name="title_activity_display_product_info">Product Details</string>
-    <string name="title_activity_search">Search Result</string>
+    <string name="title_activity_display_shares">Shares</string>
     <string name="title_activity_favourites">Favourites</string>
-    <string name="title_activity_share">Share</string>
-    <string name="title_activity_settings">Settings</string>
+    <string name="title_activity_fav_products_location">Location</string>
     <string name="title_activity_login">Login</string>
+    <string name="title_activity_map">Product Location</string>
     <string name="title_activity_register">Register</string>
-    <string name="title_activity_display_shares">View Shares</string>
-    <string name="label_my_shares">My Shares</string>
     <string name="title_activity_report_problem">Report a Problem</string>
+    <string name="title_activity_search">Search Result</string>
+    <string name="title_activity_settings">Settings</string>
+    <string name="title_activity_share">Share</string>
+    <string name="label_my_shares">My Shares</string>
 
 
     <!-- Product type -->
@@ -60,7 +61,7 @@
     <string name="last_updated" >Last Updated: %s</string>
     <string name="message_prod_info">Product\'s Information</string>
     <string name="message_share">Price and Discount</string>
-    <string name="tv_price">Price: %s</string>
+    <string name="tv_price">Price: $%1$s</string>
     <string name="tv_discount">Discount: %s</string>
     <string name="report">Report a Problem</string>
     <string name="view_shares">View Shares</string>
@@ -81,8 +82,11 @@
     <string name="fav_unit_price">U/P: $%1$.2f</string>
     <string name="fav_subtotal">Subtotal: $%1$.2f</string>
     <string name="fav_discount">"Discount: %1$s"</string>
-    <string name="fav_total_price">Total price: $%1$.2f</string>
+    <string name="fav_total_price">Total price: $%1$.2f\nTotal products: %2$d out of %3$d.</string>
 
+    <!-- FavProductsLocation Activity -->
+    <string name="no_price_string">Name: %1$s\nQty: %2$d Subtotal: $—\n\n</string>
+    <string name="price_string">Name: %1$s\nQty: %2$d Subtotal: $%3$.2f\n\n</string>
 
     <!-- Home Fragment -->
     <string name="message_welcome">Hi %1$s.\n\nWelcome to Best Price HK.\nThe best way to find bargain price.</string>
@@ -97,6 +101,8 @@
 
     <!-- Main Activity -->
     <string name="tv_location">Location: %s</string>
+    <string name="tv_name">Name: %s</string>
+
     <!-- Nav Drawer Menu Items -->
     <string-array name="nav_drawer_items">
         <item>Home</item>
@@ -157,7 +163,5 @@
     <string name="message_clear_history">This action cannot be undone. Do you want to continue?</string>
     <string name="button_yes">Yes</string>
     <string name="button_no">No</string>
-    <string name="title_activity_fav_products_location">Location</string>
-
 
 </resources>

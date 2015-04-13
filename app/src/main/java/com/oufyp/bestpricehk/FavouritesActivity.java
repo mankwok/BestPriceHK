@@ -40,20 +40,10 @@ public class FavouritesActivity extends Activity {
     private Context mContext = this;
     private DatabaseHandler db;
     private ArrayList<FavProduct> favList = new ArrayList<>();
-    //filter list
-    private ArrayList<FavProduct> pkList = new ArrayList<>();
-    private ArrayList<FavProduct> weList = new ArrayList<>();
-    private ArrayList<FavProduct> juList = new ArrayList<>();
-    private ArrayList<FavProduct> mpList = new ArrayList<>();
     private FavProductAdapter adapter;
     private ListView lv;
     private View loadingView;
     private Boolean success = false;
-    private HashMap<String, String> pk = new HashMap<>();
-    private HashMap<String, String> we = new HashMap<>();
-    private HashMap<String, String> ju = new HashMap<>();
-    private HashMap<String, String> mp = new HashMap<>();
-    private int[] productCounter = {0, 0, 0, 0};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,10 +83,7 @@ public class FavouritesActivity extends Activity {
         if (id == R.id.action_map) {
             Intent intent = new Intent(this, FavProductsLocation.class);
             intent.putExtra("TAG", TAG);
-            intent.putExtra("PK", pk);
-            intent.putExtra("WE", we);
-            intent.putExtra("JU", ju);
-            intent.putExtra("MP", mp);
+            intent.putExtra("FAVLIST", favList);
             startActivity(intent);
             return true;
         } else if (id == R.id.sort_by_name) {
@@ -160,16 +147,13 @@ public class FavouritesActivity extends Activity {
                             FavProduct favProduct = new FavProduct(id, name, type, brand, qty, price, discount, bestPrice, 4);
                             favProduct.setPrice(price);
                             favList.add(favProduct);
-                            setFilterList(favProduct, price);
                         }
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
                 lv.removeFooterView(loadingView);
-                adapter.notifyDataSetChanged();
-                setBestStoreList();
-                setBestPricesView();
+                setFavListView();
             }
         }, new Response.ErrorListener() {
             @Override
@@ -180,50 +164,7 @@ public class FavouritesActivity extends Activity {
         AppController.getInstance().addToRequestQueue(jsObjRequest);
     }
 
-    public void setBestStoreList() {
-        for (Product p : favList) {
-            if (p.getBestStore() == 0) {
-                pk.put(p.getName(), p.getBestPrice());
-            } else if (p.getBestStore() == 1) {
-                we.put(p.getName(), p.getBestPrice());
-            } else if (p.getBestStore() == 2) {
-                ju.put(p.getName(), p.getBestPrice());
-            } else if (p.getBestStore() == 3) {
-                mp.put(p.getName(), p.getBestPrice());
-            }
-        }
-    }
-
-    public void setBestPricesView() {
-        int totalBest = 0;
-        int totalProduct = 0;
-        double bestPrice = 0.0;
-        double[] storePrice = {0.0, 0.0, 0.0, 0.0};
-
-        for (FavProduct p : favList) {
-            String[] price = p.getPrice();
-            if (!p.getBestPrice().equals("none")) {
-                totalBest++;
-                bestPrice += Double.parseDouble(p.getBestPrice());
-            }
-            totalProduct++;
-            if (!price[0].equals("--")) {
-                storePrice[0] += Double.parseDouble(price[0]);
-                productCounter[0]++;
-            }
-            if (!price[1].equals("--")) {
-                storePrice[1] += Double.parseDouble(price[1]);
-                productCounter[1]++;
-            }
-            if (!price[2].equals("--")) {
-                storePrice[2] += Double.parseDouble(price[2]);
-                productCounter[2]++;
-            }
-            if (!price[3].equals("--")) {
-                storePrice[3] += Double.parseDouble(price[3]);
-                productCounter[3]++;
-            }
-        }
+    public void setFavListView() {
         final View bestPricesView = getLayoutInflater().inflate(R.layout.view_best_price, null, false);
         Spinner spinner = (Spinner) bestPricesView.findViewById(R.id.spinner);
         List<String> shopOption = new ArrayList<>();
@@ -235,10 +176,11 @@ public class FavouritesActivity extends Activity {
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, shopOption);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(dataAdapter);
+        spinner.setSelection(4);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                setPriceView(position, bestPricesView);
+                updateFavListView(position, bestPricesView);
             }
 
             @Override
@@ -246,34 +188,24 @@ public class FavouritesActivity extends Activity {
 
             }
         });
-        spinner.setSelection(4);
         lv.addHeaderView(bestPricesView, null, false);
     }
 
-    public void setPriceView(int displayflag, View view) {
-        double price = 0.0;
-        TextView tv = (TextView) view.findViewById(R.id.total_price);
+    public void updateFavListView(int displayflag, View headerView) {
+        double totaPrice = 0.0;
+        double subtotal;
+        int counter = 0;
+        TextView tv = (TextView) headerView.findViewById(R.id.total_price);
         for (FavProduct favProduct : favList) {
             favProduct.setDisplayFlag(displayflag);
-            price += favProduct.getSubTotal(displayflag);
-            adapter.notifyDataSetChanged();
+            subtotal = favProduct.getSubTotal(displayflag);
+            if(subtotal>0){
+                counter++;
+            }
+            totaPrice += subtotal;
         }
-        tv.setText(getString(R.string.fav_total_price, price));
-    }
-
-    public void setFilterList(FavProduct p, String[] price) {
-        if (!price[0].equals("--")) {
-            pkList.add(p);
-        }
-        if (!price[1].equals("--")) {
-            weList.add(p);
-        }
-        if (!price[2].equals("--")) {
-            juList.add(p);
-        }
-        if (!price[3].equals("--")) {
-            mpList.add(p);
-        }
+        tv.setText(getString(R.string.fav_total_price, totaPrice,counter,favList.size()));
+        adapter.notifyDataSetChanged();
     }
 
 }

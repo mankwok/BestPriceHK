@@ -30,34 +30,29 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.oufyp.bestpricehk.app.AppController;
+import com.oufyp.bestpricehk.model.FavProduct;
 import com.oufyp.bestpricehk.model.Store;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 
 public class FavProductsLocation extends Activity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
     public static final String TAG = MapActivity.class.getSimpleName();
     private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
     private static final int REQUEST_CODE_RECOVER_PLAY_SERVICES = 1000;
-    private static final int MARKER_PK = R.drawable.marker_pk;
     private int pinIcon = MARKER_PK;
+    private static final int MARKER_PK = R.drawable.marker_pk;
     private static final int MARKER_WELLCOME = R.drawable.marker_wellcome;
     private static final int MARKER_JUSCO = R.drawable.marker_ju;
     private static final int MARKER_MP = R.drawable.marker_mp;
     private GoogleApiClient mGoogleApiClient;
-    private HashMap<String, String> pk;
-    private HashMap<String, String> we;
-    private HashMap<String, String> ju;
-    private HashMap<String, String> mp;
+    private ArrayList<FavProduct> favList = new ArrayList<>();
+
     private boolean firstTime = true;
     private GoogleMap map;
-    //private String[] price = {"--", "--", "--", "--"};
-    //private String[] discount = {"--", "--", "--", "--"};
-    //private String store = "";
-    //private HashMap<Marker, Store> markerStoreMap = new HashMap<>();
     private int storeType;
 
     private boolean servicesConnected() {
@@ -92,11 +87,7 @@ public class FavProductsLocation extends Activity implements GoogleApiClient.Con
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
         Intent intent = getIntent();
-        pk = (HashMap<String, String>) intent.getSerializableExtra("PK");
-        we = (HashMap<String, String>) intent.getSerializableExtra("WE");
-        ju = (HashMap<String, String>) intent.getSerializableExtra("JU");
-        mp = (HashMap<String, String>) intent.getSerializableExtra("MP");
-
+        favList = (ArrayList<FavProduct>) intent.getSerializableExtra("FAVLIST");
         if (servicesConnected()) {
             mGoogleApiClient = new GoogleApiClient.Builder(this)
                     .addConnectionCallbacks(this)
@@ -161,7 +152,7 @@ public class FavProductsLocation extends Activity implements GoogleApiClient.Con
         Location mCurrentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude()), 15));
         if (firstTime) {
-            showAllStore(mCurrentLocation, 500);
+            showStore(mCurrentLocation, 500, favList.get(0).getDisplayFlag());
             firstTime = false;
         }
     }
@@ -200,11 +191,11 @@ public class FavProductsLocation extends Activity implements GoogleApiClient.Con
         GooglePlayServicesUtil.getErrorDialog(code, this, REQUEST_CODE_RECOVER_PLAY_SERVICES).show();
     }
 
-    public void showAllStore(Location currentLocation, int radius) {
+    public void showStore(Location currentLocation, int radius, final int displayFlag) {
         String url = String.format("https://maps.googleapis.com/maps/api/place/search/json?location=%f,%f&radius=%d&keyword=wellcome|parknshop|jusco|market&types=grocery_or_supermarket|department_store&sensor=true&key=%s",
                 currentLocation.getLatitude(), currentLocation.getLongitude(),
                 radius, getString(R.string.api_key));
-        Log.d(TAG, "url:" + url);
+        //Log.d(TAG, "url:" + url);
         JsonObjectRequest jsObjRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject obj) {
@@ -217,17 +208,39 @@ public class FavProductsLocation extends Activity implements GoogleApiClient.Con
                         String id = result.getString("place_id");
                         String name = result.getString("name");
                         String vicinity = result.getString("vicinity");
-                        if (name.toLowerCase().contains("parknshop")) {
-                            storeType = 0;
-                        } else if (name.toLowerCase().contains("wellcome")) {
-                            storeType = 1;
-                        } else if (name.toLowerCase().contains("jusco")) {
-                            storeType = 2;
-                        } else if (name.toLowerCase().contains("market place")) {
-                            storeType = 3;
+                        switch (displayFlag) {
+                            case 0:
+                                if (name.toLowerCase().contains("parknshop")) {
+                                    storeType = 0;
+                                }
+                                break;
+                            case 1:
+                                if (name.toLowerCase().contains("wellcome")) {
+                                    storeType = 1;
+                                }
+                                break;
+                            case 2:
+                                if (name.toLowerCase().contains("jusco")) {
+                                    storeType = 2;
+                                }
+                                break;
+                            case 3:
+                                if (name.toLowerCase().contains("market place")) {
+                                    storeType = 3;
+                                }
+                                break;
+                            case 4:
+                                if (name.toLowerCase().contains("parknshop")) {
+                                    storeType = 0;
+                                } else if (name.toLowerCase().contains("wellcome")) {
+                                    storeType = 1;
+                                } else if (name.toLowerCase().contains("jusco")) {
+                                    storeType = 2;
+                                } else if (name.toLowerCase().contains("market place")) {
+                                    storeType = 3;
+                                }
                         }
-                        Store store = new Store(id, name, latLng, vicinity, storeType);
-                        Marker m = placeMarker(store);
+                        placeMarker(new Store(id, name, latLng, vicinity, storeType));
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -271,32 +284,41 @@ public class FavProductsLocation extends Activity implements GoogleApiClient.Con
         String snippet = marker.getSnippet();
         TextView tittleTV = ((TextView) view.findViewById(R.id.store_name));
         TextView snippetTV = ((TextView) view.findViewById(R.id.store_location));
+        TextView nameTV = (TextView) view.findViewById(R.id.name_tv);
         TextView priceTV = ((TextView) view.findViewById(R.id.price_tv));
         TextView discountTV = ((TextView) view.findViewById(R.id.discount_tv));
-        String productList = "Best price product(s):\n";
+        String productList = "Your favourite products:\n\n";
         tittleTV.setText(tittle);
+        nameTV.setVisibility(View.GONE); // hide name TV
         discountTV.setVisibility(View.GONE); // hide discount TV
         snippetTV.setText(getString(R.string.tv_location, snippet));
         if (tittle.toLowerCase().contains("park")) {
-            if (pk.isEmpty()) {
+            if (favList.isEmpty()) {
                 productList += "None.\n";
             } else {
-                for (String key : pk.keySet()) {
-                    productList += key + ": $" + pk.get(key) + "\n";
-                }
+                productList = getProductInfo(0);
             }
-            priceTV.setText(productList);
-
         } else if (tittle.toLowerCase().contains("well")) {
-            if (we.isEmpty()) {
+            if (favList.isEmpty()) {
                 productList += "None.\n";
             } else {
-                for (String key : we.keySet()) {
-                    productList += key + ": $" + we.get(key) + "\n";
-                }
+                productList = getProductInfo(1);
             }
-            priceTV.setText(productList);
+        }else  if (tittle.toLowerCase().contains("jusco")) {
+            if (favList.isEmpty()) {
+                productList += "None.\n";
+            } else {
+                productList = getProductInfo(2);
+            }
+        }else  if (tittle.toLowerCase().contains("market place")) {
+            if (favList.isEmpty()) {
+                productList += "None.\n";
+            } else {
+                productList = getProductInfo(3);
+            }
         }
+        priceTV.setText(productList);
+
         return view;
     }
 
@@ -323,4 +345,17 @@ public class FavProductsLocation extends Activity implements GoogleApiClient.Con
         }
     }
 
+    public String getProductInfo(int displayFlag){
+        String info = "";
+        for(FavProduct favProduct : favList){
+            double unitPrice = favProduct.getUnitPrice(displayFlag);
+            if(unitPrice == 0.0){
+                info += this.getResources().getString(R.string.no_price_string,favProduct.getName(),favProduct.getQty());
+            }
+            else{
+                info += this.getResources().getString(R.string.price_string,favProduct.getName(),favProduct.getQty(),favProduct.getSubTotal(displayFlag));
+            }
+        }
+        return info;
+    }
 }

@@ -331,10 +331,12 @@ public class MapActivity extends Activity implements GoogleApiClient.ConnectionC
         String snippet = marker.getSnippet();
         TextView tittleTV = ((TextView) view.findViewById(R.id.store_name));
         TextView snippetTV = ((TextView) view.findViewById(R.id.store_location));
+        TextView nameTV = (TextView) view.findViewById(R.id.name_tv);
         TextView priceTV = ((TextView) view.findViewById(R.id.price_tv));
         TextView discountTV = ((TextView) view.findViewById(R.id.discount_tv));
         tittleTV.setText(tittle);
         snippetTV.setText(getString(R.string.tv_location, snippet));
+        nameTV.setText(getString(R.string.tv_name, product.getName()));
         if (tittle.toLowerCase().contains("park")) {
             priceTV.setText(getString(R.string.tv_price, price[0]));
             discountTV.setText(getString(R.string.tv_discount, discount[0]));
