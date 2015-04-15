@@ -43,9 +43,9 @@ public class DisplayProductInfo extends Activity {
     private UserFunctions uf = new UserFunctions();
     private DatabaseHandler db;
     private Product product;
-    private String[] price = {"--", "--", "--", "--"};
-    private String[] discount = {"--", "--", "--", "--"};
-    private String lastDate = "--";
+    private String[] price = {"—", "—", "—", "—"};
+    private String[] discount = {"—", "—", "—", "—"};
+    private String lastDate = "—";
     private ImageView image;
     private TextView description;
     private TextView countFav;
@@ -127,13 +127,12 @@ public class DisplayProductInfo extends Activity {
                     if (db.isFavourited(product.getId())) {
                         // remove favourite product
                         new AlertDialog.Builder(this)
-                                .setTitle("Remove Favourite Product")
-                                .setMessage("Are you sure want to remove product in favourite list? ")
-                                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                .setMessage("Remove product from favourite list? ")
+                                .setPositiveButton("REMOVE", new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int whichButton) {
                                         removeFavourite(product);
                                     }
-                                }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                }).setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
                                 // Do nothing.
                             }
@@ -263,10 +262,10 @@ public class DisplayProductInfo extends Activity {
         final Spinner sp = new Spinner(this);
         sp.setAdapter(dataAdapter);
         new AlertDialog.Builder(this)
-                .setTitle("Add product to favourite list")
-                .setMessage("Select favourite product's quantity: ")
+                .setTitle("Add to favourite list")
+                .setMessage("Select product's quantity: ")
                 .setView(sp)
-                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         selectedQty = sp.getSelectedItem().toString();
                         Map<String, String> params = new HashMap<>();
@@ -300,7 +299,7 @@ public class DisplayProductInfo extends Activity {
                         });
                         AppController.getInstance().addToRequestQueue(request);
                     }
-                }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                }).setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
                 // Do nothing.
             }

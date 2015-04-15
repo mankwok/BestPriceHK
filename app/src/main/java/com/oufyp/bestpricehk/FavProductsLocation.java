@@ -43,8 +43,8 @@ public class FavProductsLocation extends Activity implements GoogleApiClient.Con
     public static final String TAG = MapActivity.class.getSimpleName();
     private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
     private static final int REQUEST_CODE_RECOVER_PLAY_SERVICES = 1000;
-    private int pinIcon = MARKER_PK;
     private static final int MARKER_PK = R.drawable.marker_pk;
+    private int pinIcon = MARKER_PK;
     private static final int MARKER_WELLCOME = R.drawable.marker_wellcome;
     private static final int MARKER_JUSCO = R.drawable.marker_ju;
     private static final int MARKER_MP = R.drawable.marker_mp;
@@ -143,7 +143,7 @@ public class FavProductsLocation extends Activity implements GoogleApiClient.Con
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+        //int id = item.getItemId();
         return super.onOptionsItemSelected(item);
     }
 
@@ -195,7 +195,7 @@ public class FavProductsLocation extends Activity implements GoogleApiClient.Con
         String url = String.format("https://maps.googleapis.com/maps/api/place/search/json?location=%f,%f&radius=%d&keyword=wellcome|parknshop|jusco|market&types=grocery_or_supermarket|department_store&sensor=true&key=%s",
                 currentLocation.getLatitude(), currentLocation.getLongitude(),
                 radius, getString(R.string.api_key));
-        //Log.d(TAG, "url:" + url);
+        Log.d(TAG, "url:" + url);
         JsonObjectRequest jsObjRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject obj) {
@@ -304,13 +304,13 @@ public class FavProductsLocation extends Activity implements GoogleApiClient.Con
             } else {
                 productList = getProductInfo(1);
             }
-        }else  if (tittle.toLowerCase().contains("jusco")) {
+        } else if (tittle.toLowerCase().contains("jusco")) {
             if (favList.isEmpty()) {
                 productList += "None.\n";
             } else {
                 productList = getProductInfo(2);
             }
-        }else  if (tittle.toLowerCase().contains("market place")) {
+        } else if (tittle.toLowerCase().contains("market place")) {
             if (favList.isEmpty()) {
                 productList += "None.\n";
             } else {
@@ -320,6 +320,19 @@ public class FavProductsLocation extends Activity implements GoogleApiClient.Con
         priceTV.setText(productList);
 
         return view;
+    }
+
+    public String getProductInfo(int displayFlag) {
+        String info = "";
+        for (FavProduct favProduct : favList) {
+            double unitPrice = favProduct.getUnitPrice(displayFlag);
+            if (unitPrice == 0.0) {
+                info += this.getResources().getString(R.string.no_price_string, favProduct.getName(), favProduct.getQty());
+            } else {
+                info += this.getResources().getString(R.string.price_string, favProduct.getName(), favProduct.getQty(), favProduct.getSubTotal(displayFlag));
+            }
+        }
+        return info;
     }
 
     // Define a DialogFragment that displays the error dialog
@@ -343,19 +356,5 @@ public class FavProductsLocation extends Activity implements GoogleApiClient.Con
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             return mDialog;
         }
-    }
-
-    public String getProductInfo(int displayFlag){
-        String info = "";
-        for(FavProduct favProduct : favList){
-            double unitPrice = favProduct.getUnitPrice(displayFlag);
-            if(unitPrice == 0.0){
-                info += this.getResources().getString(R.string.no_price_string,favProduct.getName(),favProduct.getQty());
-            }
-            else{
-                info += this.getResources().getString(R.string.price_string,favProduct.getName(),favProduct.getQty(),favProduct.getSubTotal(displayFlag));
-            }
-        }
-        return info;
     }
 }

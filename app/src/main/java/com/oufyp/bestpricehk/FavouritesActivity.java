@@ -1,9 +1,15 @@
 package com.oufyp.bestpricehk;
 
 import android.app.Activity;
+import android.app.Dialog;
+import android.app.DialogFragment;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentSender;
+import android.location.Location;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,6 +24,10 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
 import com.oufyp.bestpricehk.adapter.FavProductAdapter;
 import com.oufyp.bestpricehk.app.AppController;
 import com.oufyp.bestpricehk.database.DatabaseHandler;
@@ -35,15 +45,22 @@ import java.util.HashMap;
 import java.util.List;
 
 
-public class FavouritesActivity extends Activity {
+public class FavouritesActivity extends Activity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
     public static final String TAG = FavouritesActivity.class.getSimpleName();
+    private static final int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
+    private static final int REQUEST_CODE_RECOVER_PLAY_SERVICES = 1000;
+    private GoogleApiClient mGoogleApiClient;
+    private Location mCurrentLocation;
     private Context mContext = this;
     private DatabaseHandler db;
     private ArrayList<FavProduct> favList = new ArrayList<>();
     private FavProductAdapter adapter;
     private ListView lv;
     private View loadingView;
+    private View headerView;
     private Boolean success = false;
+    private ProgressDialog pDialog;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +69,7 @@ public class FavouritesActivity extends Activity {
         db = DatabaseHandler.getInstance(mContext);
         loadingView = getLayoutInflater().inflate(R.layout.loading, null, false);
         adapter = new FavProductAdapter(mContext, favList);
+        headerView = getLayoutInflater().inflate(R.layout.view_best_price, null, false);
         lv = (ListView) findViewById(android.R.id.list);
         lv.addFooterView(loadingView, null, false);
         lv.setAdapter(adapter);
@@ -65,6 +83,26 @@ public class FavouritesActivity extends Activity {
                 startActivity(intent);
             }
         });
+        if (servicesConnected()) {
+            mGoogleApiClient = new GoogleApiClient.Builder(this)
+                    .addConnectionCallbacks(this)
+                    .addOnConnectionFailedListener(this)
+                    .addApi(LocationServices.API)
+                    .build();
+        }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mGoogleApiClient.connect();
+    }
+
+    @Override
+    protected void onStop() {
+        // Disconnecting the client invalidates it.
+        mGoogleApiClient.disconnect();
+        super.onStop();
     }
 
     @Override
@@ -113,6 +151,61 @@ public class FavouritesActivity extends Activity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onConnected(Bundle bundle) {
+        mCurrentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+        Log.i(TAG, "Location services suspended. Please reconnect.");
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+        if (connectionResult.hasResolution()) {
+            try {
+                // Start an Activity that tries to resolve the error
+                connectionResult.startResolutionForResult(this, CONNECTION_FAILURE_RESOLUTION_REQUEST);
+            } catch (IntentSender.SendIntentException e) {
+                e.printStackTrace();
+            }
+        } else {
+            showErrorDialog(connectionResult.getErrorCode());
+        }
+    }
+
+    private boolean servicesConnected() {
+        // Check that Google Play services is available
+        int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
+        // If Google Play services is available
+        if (ConnectionResult.SUCCESS == resultCode) {
+            // In debug mode, log the status
+            // Continue
+            return true;
+            // Google Play services was not available for some reason.
+            // resultCode holds the error code.
+        } else {
+            // Get the error dialog from Google Play services
+            Dialog errorDialog = GooglePlayServicesUtil.getErrorDialog(resultCode, this, CONNECTION_FAILURE_RESOLUTION_REQUEST);
+
+            // If Google Play services can provide an error dialog
+            if (errorDialog != null) {
+                // Create a new DialogFragment for the error dialog
+                ErrorDialogFragment errorFragment = new ErrorDialogFragment();
+                // Set the dialog in the DialogFragment
+                errorFragment.setDialog(errorDialog);
+                // Show the error dialog in the DialogFragment
+                errorFragment.show(getFragmentManager(), "Location Updates");
+            }
+            return false;
+        }
+    }
+
+    public void showErrorDialog(int code) {
+        GooglePlayServicesUtil.getErrorDialog(code, this, REQUEST_CODE_RECOVER_PLAY_SERVICES).show();
     }
 
     public void getFavProducts() {
@@ -165,14 +258,16 @@ public class FavouritesActivity extends Activity {
     }
 
     public void setFavListView() {
-        final View bestPricesView = getLayoutInflater().inflate(R.layout.view_best_price, null, false);
-        Spinner spinner = (Spinner) bestPricesView.findViewById(R.id.spinner);
+        final TextView storeLocation = (TextView) headerView.findViewById(R.id.store_location);
+        Spinner spinner = (Spinner) headerView.findViewById(R.id.spinner);
         List<String> shopOption = new ArrayList<>();
+        storeLocation.setVisibility(View.GONE);
         shopOption.add("Shop in ParknShop");
         shopOption.add("Shop in Wellcome");
         shopOption.add("Shop in Jusco");
         shopOption.add("Shop in Market Place");
         shopOption.add("Shop with best price");
+        shopOption.add("Shop in nearest store");
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, shopOption);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(dataAdapter);
@@ -180,7 +275,13 @@ public class FavouritesActivity extends Activity {
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                updateFavListView(position, bestPricesView);
+                if (position == 5) {
+                    storeLocation.setVisibility(View.VISIBLE);
+                    findNearestStore(mCurrentLocation, 500);
+                } else {
+                    storeLocation.setVisibility(View.GONE);
+                    updateFavListView(position);
+                }
             }
 
             @Override
@@ -188,10 +289,10 @@ public class FavouritesActivity extends Activity {
 
             }
         });
-        lv.addHeaderView(bestPricesView, null, false);
+        lv.addHeaderView(headerView, null, false);
     }
 
-    public void updateFavListView(int displayflag, View headerView) {
+    public void updateFavListView(int displayflag) {
         double totaPrice = 0.0;
         double subtotal;
         int counter = 0;
@@ -199,13 +300,87 @@ public class FavouritesActivity extends Activity {
         for (FavProduct favProduct : favList) {
             favProduct.setDisplayFlag(displayflag);
             subtotal = favProduct.getSubTotal(displayflag);
-            if(subtotal>0){
+            if (subtotal > 0) {
                 counter++;
             }
             totaPrice += subtotal;
         }
-        tv.setText(getString(R.string.fav_total_price, totaPrice,counter,favList.size()));
+        tv.setText(getString(R.string.fav_total_price, totaPrice, counter, favList.size()));
         adapter.notifyDataSetChanged();
     }
 
+    public void findNearestStore(Location currentLocation, int radius) {
+        String url = String.format("https://maps.googleapis.com/maps/api/place/search/json?location=%f,%f&radius=%d&keyword=wellcome|parknshop|jusco|market&types=grocery_or_supermarket|department_store&sensor=true&key=%s",
+                currentLocation.getLatitude(), currentLocation.getLongitude(), radius, getString(R.string.api_key));
+        final TextView tv = (TextView) headerView.findViewById(R.id.store_location);
+        pDialog = new ProgressDialog(this);
+        pDialog.setMessage(getString(R.string.locate_store));
+        pDialog.show();
+        JsonObjectRequest jsObjRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject obj) {
+                JSONArray results;
+                JSONObject result;
+                //JSONObject location = result.getJSONObject("geometry").getJSONObject("location");
+                //LatLng latLng = new LatLng(location.getDouble("lat"), location.getDouble("lng"));
+                //String id = "";
+                String name = "";
+                String vicinity = "";
+                int displayFlag = 0;
+                try {
+                    results = obj.getJSONArray("results");
+                    result = results.getJSONObject(0);
+                    name = result.getString("name");
+                    vicinity = result.getString("vicinity");
+                    displayFlag = 0;
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                if (name.toLowerCase().contains("parknshop")) {
+                    displayFlag = 0;
+                } else if (name.toLowerCase().contains("wellcome")) {
+                    displayFlag = 1;
+                } else if (name.toLowerCase().contains("jusco")) {
+                    displayFlag = 2;
+                } else if (name.toLowerCase().contains("market place")) {
+                    displayFlag = 3;
+                }
+                tv.setText("Store: " + name + "\nAddress: " + vicinity);
+                updateFavListView(displayFlag);
+                pDialog.cancel();
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                VolleyLog.d(TAG, "Error: " + error.getMessage());
+                pDialog.cancel();
+
+            }
+        });
+        AppController.getInstance().addToRequestQueue(jsObjRequest);
+    }
+
+    // Define a DialogFragment that displays the error dialog
+    public static class ErrorDialogFragment extends DialogFragment {
+        // Global field to contain the error dialog
+        private Dialog mDialog;
+
+        // Default constructor. Sets the dialog field to null
+        public ErrorDialogFragment() {
+            super();
+            mDialog = null;
+        }
+
+        // Set the dialog to display
+        public void setDialog(Dialog dialog) {
+            mDialog = dialog;
+        }
+
+        // Return a Dialog to the DialogFragment.
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            return mDialog;
+        }
+    }
 }
