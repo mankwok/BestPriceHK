@@ -112,11 +112,15 @@ public class FavProduct extends Product {
     }
 
     public String getDisplayDiscount(int displayFlag) {
+        int bestStore = this.getBestStore();
         if (displayFlag < 4) {
             return this.getDiscount()[displayFlag];
-        } else {
-            return this.getDiscount()[this.getBestStore()];
+        } else if(bestStore == -1){// prodict is not available in all shop
+            return "--";
+        }else{
+            return this.getDiscount()[bestStore];
         }
+
     }
 
 }

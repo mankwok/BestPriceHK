@@ -73,11 +73,14 @@ public class HotFragment extends Fragment {
                             String brand = jsonObject.getString("brand");
                             int countFav = Integer.parseInt(jsonObject.getString("count_fav"));
                             int countShare = Integer.parseInt(jsonObject.getString("count_share"));
-                            String bestPrice = "none";
-                            if(!jsonObject.getString("bestPrice").equals("null")) {
-                                bestPrice = jsonObject.getString("bestPrice");
-                            }
+                            String[] price = {"--", "--", "--", "--"};
+                            price[0] = jsonObject.getString("price1");
+                            price[1] = jsonObject.getString("price2");
+                            price[2] = jsonObject.getString("price3");
+                            price[3] = jsonObject.getString("price4");
+                            String bestPrice = jsonObject.getString("bestPrice");
                             Product product = new Product(id, name, type, brand,countFav,countShare,bestPrice);
+                            product.setPrice(price);
                             productsList.add(product);
                         }
                     }

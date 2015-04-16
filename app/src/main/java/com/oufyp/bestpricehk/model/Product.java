@@ -179,7 +179,7 @@ public class Product implements Serializable {
                 return index;
             }
         }
-        return 0;
+        return -1;
     }
 
 }

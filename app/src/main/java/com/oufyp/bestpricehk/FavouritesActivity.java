@@ -212,7 +212,7 @@ public class FavouritesActivity extends Activity implements GoogleApiClient.Conn
         HashMap<String, String> user = db.getUserDetails();
         String uid = user.get("uid");
         String url = String.format("http://101.78.220.131:8909/bestpricehk/fav_api/favlist.php?uid=%s", uid);
-        final JsonObjectRequest jsObjRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+        JsonObjectRequest jsObjRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject obj) {
                 try {
