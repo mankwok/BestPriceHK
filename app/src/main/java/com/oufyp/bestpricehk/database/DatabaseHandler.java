@@ -106,6 +106,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         HashMap<String, String> user = this.getUserDetails();
         String uid = user.get("uid");
         db.delete(TABLE_FAVPRODUCT, KEY_ID + " = ? and " + KEY_UID + " = ?", new String[]{String.valueOf(product.getId()), uid});
+        db.close();
     }
 
     public void clearFavProduct() {
