@@ -123,4 +123,22 @@ public class FavProduct extends Product {
 
     }
 
+    public String getAvailableStores(){
+        String[] prices = this.getPrice();
+        String[] storeName = {"ParknShop", "Wellcome", "Jusco", "Market Place"};
+        String availableStore = "";
+        boolean first = true;
+        for(int i = 0; i < prices.length;i++){
+            if(!prices[i].equals("--")){
+                if(first){
+                    availableStore += storeName[i];
+                    first = false;
+                }else{
+                    availableStore += ", " +storeName[i];
+                }
+            }
+
+        }
+        return availableStore;
+    }
 }

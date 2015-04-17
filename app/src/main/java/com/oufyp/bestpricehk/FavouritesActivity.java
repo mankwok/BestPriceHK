@@ -124,7 +124,10 @@ public class FavouritesActivity extends Activity implements GoogleApiClient.Conn
             intent.putExtra("FAVLIST", favList);
             startActivity(intent);
             return true;
-        } else if (id == R.id.sort_by_name) {
+        } else if (id == R.id.sort_by_availability){
+            sortByAvailable(0);
+            adapter.notifyDataSetChanged();
+        }else if (id == R.id.sort_by_name) {
 
             Collections.sort(adapter.getFavProducts(), new Comparator<Product>() {
                 public int compare(Product lhs, Product rhs) {
@@ -208,6 +211,16 @@ public class FavouritesActivity extends Activity implements GoogleApiClient.Conn
         GooglePlayServicesUtil.getErrorDialog(code, this, REQUEST_CODE_RECOVER_PLAY_SERVICES).show();
     }
 
+    public void sortByAvailable(final int displayflag){
+        Collections.sort(adapter.getFavProducts(), new Comparator<FavProduct>() {
+            public int compare(FavProduct lhs, FavProduct rhs) {
+                    return lhs.getAvailable(displayflag).compareTo(rhs.getAvailable(displayflag));
+
+            }
+        });
+        adapter.notifyDataSetChanged();
+    }
+
     public void getFavProducts() {
         HashMap<String, String> user = db.getUserDetails();
         String uid = user.get("uid");
@@ -271,17 +284,21 @@ public class FavouritesActivity extends Activity implements GoogleApiClient.Conn
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, shopOption);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(dataAdapter);
-        spinner.setSelection(4);
+        //spinner.setSelection(4);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (position == 5) {
                     storeLocation.setVisibility(View.VISIBLE);
                     findNearestStore(mCurrentLocation, 500);
+                    sortByAvailable(0);
+
                 } else {
                     storeLocation.setVisibility(View.GONE);
                     updateFavListView(position);
                 }
+                sortByAvailable(position);
+
             }
 
             @Override

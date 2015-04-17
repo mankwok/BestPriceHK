@@ -11,6 +11,8 @@
         android:showAsAction="ifRoom"
         android:title="Sort">
         <menu android:title="Sort">
+            <item android:id="@+id/sort_by_availability"
+                android:title="By availability"/>
             <item
                 android:id="@+id/sort_by_brand"
                 android:title="By Brand" />

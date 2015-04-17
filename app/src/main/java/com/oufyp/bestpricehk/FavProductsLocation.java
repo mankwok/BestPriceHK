@@ -38,6 +38,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class FavProductsLocation extends Activity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
     public static final String TAG = MapActivity.class.getSimpleName();
@@ -208,38 +210,16 @@ public class FavProductsLocation extends Activity implements GoogleApiClient.Con
                         String id = result.getString("place_id");
                         String name = result.getString("name");
                         String vicinity = result.getString("vicinity");
-                        switch (displayFlag) {
-                            case 0:
-                                if (name.toLowerCase().contains("parknshop")) {
-                                    storeType = 0;
-                                }
-                                break;
-                            case 1:
-                                if (name.toLowerCase().contains("wellcome")) {
-                                    storeType = 1;
-                                }
-                                break;
-                            case 2:
-                                if (name.toLowerCase().contains("jusco")) {
-                                    storeType = 2;
-                                }
-                                break;
-                            case 3:
-                                if (name.toLowerCase().contains("market place")) {
-                                    storeType = 3;
-                                }
-                                break;
-                            case 4:
-                                if (name.toLowerCase().contains("parknshop")) {
-                                    storeType = 0;
-                                } else if (name.toLowerCase().contains("wellcome")) {
-                                    storeType = 1;
-                                } else if (name.toLowerCase().contains("jusco")) {
-                                    storeType = 2;
-                                } else if (name.toLowerCase().contains("market place")) {
-                                    storeType = 3;
-                                }
+                        if (name.toLowerCase().contains("parknshop")) {
+                            storeType = 0;
+                        } else if (name.toLowerCase().contains("wellcome")) {
+                            storeType = 1;
+                        } else if (name.toLowerCase().contains("jusco")) {
+                            storeType = 2;
+                        } else if (name.toLowerCase().contains("market place")) {
+                            storeType = 3;
                         }
+
                         placeMarker(new Store(id, name, latLng, vicinity, storeType));
                     }
                 } catch (JSONException e) {
@@ -324,6 +304,9 @@ public class FavProductsLocation extends Activity implements GoogleApiClient.Con
 
     public String getProductInfo(int displayFlag) {
         String info = "";
+        if(!(displayFlag == favList.get(0).getDisplayFlag())) {
+            sortByAvailable(displayFlag);
+        }
         for (FavProduct favProduct : favList) {
             double unitPrice = favProduct.getUnitPrice(displayFlag);
             if (unitPrice == 0.0) {
@@ -335,6 +318,14 @@ public class FavProductsLocation extends Activity implements GoogleApiClient.Con
         return info;
     }
 
+    public void sortByAvailable(final int displayflag){
+        Collections.sort(favList, new Comparator<FavProduct>() {
+            public int compare(FavProduct lhs, FavProduct rhs) {
+                return lhs.getAvailable(displayflag).compareTo(rhs.getAvailable(displayflag));
+
+            }
+        });
+    }
     // Define a DialogFragment that displays the error dialog
     public static class ErrorDialogFragment extends DialogFragment {
         // Global field to contain the error dialog
