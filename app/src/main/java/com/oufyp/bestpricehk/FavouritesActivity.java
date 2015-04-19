@@ -125,7 +125,7 @@ public class FavouritesActivity extends Activity implements GoogleApiClient.Conn
             startActivity(intent);
             return true;
         } else if (id == R.id.sort_by_availability){
-            sortByAvailable(0);
+            sortByAvailable();
             adapter.notifyDataSetChanged();
         }else if (id == R.id.sort_by_name) {
 
@@ -211,10 +211,10 @@ public class FavouritesActivity extends Activity implements GoogleApiClient.Conn
         GooglePlayServicesUtil.getErrorDialog(code, this, REQUEST_CODE_RECOVER_PLAY_SERVICES).show();
     }
 
-    public void sortByAvailable(final int displayflag){
+    public void sortByAvailable(){
         Collections.sort(adapter.getFavProducts(), new Comparator<FavProduct>() {
             public int compare(FavProduct lhs, FavProduct rhs) {
-                    return lhs.getAvailable(displayflag).compareTo(rhs.getAvailable(displayflag));
+                    return lhs.getAvailable(lhs.getDisplayFlag()).compareTo(rhs.getAvailable(rhs.getDisplayFlag()));
 
             }
         });
@@ -291,13 +291,11 @@ public class FavouritesActivity extends Activity implements GoogleApiClient.Conn
                 if (position == 5) {
                     storeLocation.setVisibility(View.VISIBLE);
                     findNearestStore(mCurrentLocation, 500);
-                    sortByAvailable(0);
-
                 } else {
                     storeLocation.setVisibility(View.GONE);
                     updateFavListView(position);
                 }
-                sortByAvailable(position);
+                sortByAvailable();
 
             }
 
