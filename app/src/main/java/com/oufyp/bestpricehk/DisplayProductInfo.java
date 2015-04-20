@@ -120,10 +120,10 @@ public class DisplayProductInfo extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void socialBtnHandler(View v){
-        switch(v.getId()){
-            case R.id.button_favourite:
-                if (uf.isUserLoggedIn(mContext)) {
+    public void socialBtnHandler(View v) {
+        if (uf.isUserLoggedIn(mContext)) {
+            switch (v.getId()) {
+                case R.id.button_favourite:
                     if (db.isFavourited(product.getId())) {
                         // remove favourite product
                         new AlertDialog.Builder(this)
@@ -141,19 +141,16 @@ public class DisplayProductInfo extends Activity {
                     else {
                         setFavourite(product);
                     }
-                } // user is not logged in
-                else {
-                    Toast.makeText(mContext, "Please login first.", Toast.LENGTH_SHORT).show();
-                }
-                break;
-            case R.id.button_share:
-                if (uf.isUserLoggedIn(mContext)) {
-                    Intent intent = new Intent(this, ShareActivity.class);
-                    intent.putExtra("PRODUCT", product);
-                    startActivity(intent);
-                } else {
-                    Toast.makeText(mContext, "Please login first.", Toast.LENGTH_SHORT).show();
-                }
+                    break;
+                case R.id.button_share:
+                    if (uf.isUserLoggedIn(mContext)) {
+                        Intent intent = new Intent(this, ShareActivity.class);
+                        intent.putExtra("PRODUCT", product);
+                        startActivity(intent);
+                    }
+            }
+        } else {
+            Toast.makeText(mContext, getString(R.string.please_login), Toast.LENGTH_SHORT).show();
         }
     }
 
