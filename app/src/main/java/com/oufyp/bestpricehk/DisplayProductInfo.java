@@ -143,11 +143,9 @@ public class DisplayProductInfo extends Activity {
                     }
                     break;
                 case R.id.button_share:
-                    if (uf.isUserLoggedIn(mContext)) {
-                        Intent intent = new Intent(this, ShareActivity.class);
-                        intent.putExtra("PRODUCT", product);
-                        startActivity(intent);
-                    }
+                    Intent intent = new Intent(this, ShareActivity.class);
+                    intent.putExtra("PRODUCT", product);
+                    startActivity(intent);
             }
         } else {
             Toast.makeText(mContext, getString(R.string.please_login), Toast.LENGTH_SHORT).show();
