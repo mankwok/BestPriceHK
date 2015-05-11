@@ -63,7 +63,7 @@ public class SearchActivity extends Activity {
         }//advanced search
         else if (intent.getExtras().getString("TAG") != null && intent.getExtras().getString("TAG").equals("AdvSearchFragment")) {
             HashMap<String, String> params = (HashMap<String, String>) intent.getSerializableExtra("params");
-            tv.setText(getString(R.string.label_adv_search, params.get("keyword").replace("%20"," "), params.get("type"), params.get("store"), params.get("startPrice"), params.get("endPrice")));
+            tv.setText(getString(R.string.label_adv_search, params.get("keyword").replace("%20"," "), params.get("brand").replace("%20"," "), params.get("type"), params.get("store"), params.get("startPrice"), params.get("endPrice")));
             advSearch(params);
         }
         // browse more
@@ -149,13 +149,14 @@ public class SearchActivity extends Activity {
     }
     
     public void search(String query) {
-        String url = String.format("http://101.78.220.131:8909/bestpricehk/products/search/%s", query);
+        String url = String.format("http://101.78.220.131:8909/bestpricehk/products/search/%s", query.replace(" ","%20"));
         JsonObjectRequest jsObjRequest = new JsonObjectRequest(Request.Method.GET, url, null, new SearchResponseListener(), new SearchErrorListener());
         AppController.getInstance().addToRequestQueue(jsObjRequest);
     }
 
     public void advSearch(HashMap<String, String> params) {
         String key = params.get("keyword");
+        String brand = params.get("brand");
         String type = params.get("type");
         if (type.equals(getString(R.string.milk_powder))) {
             type = "powder";
@@ -165,7 +166,7 @@ public class SearchActivity extends Activity {
         //String store = params.get("store");
         String startPrice = params.get("startPrice");
         String endPrice = params.get("endPrice");
-        String url = String.format("http://101.78.220.131:8909/bestpricehk/adv_search.php?key=%s&type=%s&start=%s&end=%s", key, type, startPrice, endPrice);
+        String url = String.format("http://101.78.220.131:8909/bestpricehk/adv_search.php?key=%s&brand=%s&type=%s&start=%s&end=%s", key, brand, type, startPrice, endPrice);
         JsonObjectRequest jsObjRequest = new JsonObjectRequest(Request.Method.GET, url, null, new SearchResponseListener(), new SearchErrorListener());
         AppController.getInstance().addToRequestQueue(jsObjRequest);
     }

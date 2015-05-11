@@ -147,7 +147,7 @@
     <!-- Search Activity -->
     <string name="label_search">"Searching for %1$s."</string>
     <string name="label_search_in_store">"Searching for %1$s in %2$s."</string>
-    <string name="label_adv_search">"Searching for %1$s; Type: %2$s;\nStore: %3$s ; Best price range: From %4$s to %5$s."</string>
+    <string name="label_adv_search">"Searching for %1$s; Brand: %2$s;\nType: %3$s; Store: %4$s;\nBest price range: From %5$s to %6$s."</string>
     <string name="message_no_prod">No products found.</string>
     <string name="message_shared">Product shared.</string>
 

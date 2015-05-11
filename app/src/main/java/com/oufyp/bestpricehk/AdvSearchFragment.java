@@ -16,6 +16,7 @@ import java.util.HashMap;
 public class AdvSearchFragment extends Fragment {
     public static final String TAG = AdvSearchFragment.class.getSimpleName();
     private EditText keywordET;
+    private EditText brandET;
     private Spinner typeSpinner;
     private Spinner storeSpinner;
     private EditText startPriceET;
@@ -39,6 +40,7 @@ public class AdvSearchFragment extends Fragment {
                 getString(R.string.jusco), getString(R.string.market_place)
         };
         keywordET = (EditText) view.findViewById(R.id.keyword);
+        brandET = (EditText) view.findViewById(R.id.brand);
         typeSpinner = (Spinner) view.findViewById(R.id.type);
         storeSpinner = (Spinner) view.findViewById(R.id.store);
         startPriceET = (EditText) view.findViewById(R.id.start_price);
@@ -66,6 +68,7 @@ public class AdvSearchFragment extends Fragment {
         params.put("tag", "login");
         //URL space to %20 (GET method)
         params.put("keyword", keywordET.getText().toString().equals("") ? "Any" : keywordET.getText().toString().replace(" ", "%20"));
+        params.put("brand", brandET.getText().toString().equals("") ? "Any" : brandET.getText().toString().replace(" ", "%20"));
         params.put("type", typeSpinner.getSelectedItem().toString());
         params.put("store", storeSpinner.getSelectedItem().toString());
         params.put("startPrice", startPriceET.getText().toString().equals("") ? "Any" : startPriceET.getText().toString());
