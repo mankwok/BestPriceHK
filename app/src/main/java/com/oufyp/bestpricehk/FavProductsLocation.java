@@ -312,7 +312,7 @@ public class FavProductsLocation extends Activity implements GoogleApiClient.Con
             if (unitPrice == 0.0) {
                 info += this.getResources().getString(R.string.no_price_string, favProduct.getName(), favProduct.getQty());
             } else {
-                info += this.getResources().getString(R.string.price_string, favProduct.getName(), favProduct.getQty(), favProduct.getSubTotal(displayFlag));
+                info += this.getResources().getString(R.string.price_string, favProduct.getName(), favProduct.getQty(),favProduct.getUnitPrice(displayFlag), favProduct.getSubTotal(displayFlag));
             }
         }
         return info;

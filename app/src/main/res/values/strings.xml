@@ -86,7 +86,7 @@
 
     <!-- FavProductsLocation Activity -->
     <string name="no_price_string">Name: %1$s\nQty: %2$d Subtotal: $—\n\n</string>
-    <string name="price_string">Name: %1$s\nQty: %2$d Subtotal: $%3$.2f\n\n</string>
+    <string name="price_string">Name: %1$s\nQty: %2$d U/P: $%3$.2f Subtotal: $%4$.2f\n\n</string>
 
     <!-- Home Fragment -->
     <string name="message_welcome">Hi %1$s.\n\nWelcome to Best Price HK.\nThe best way to find supermarket bargain.</string>
