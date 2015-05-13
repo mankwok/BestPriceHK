@@ -80,26 +80,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.close(); // Closing database connection
     }
 
-    public ArrayList<Product> getFavProducts() {
-        ArrayList<Product> productList = new ArrayList<>();
-        HashMap<String, String> user = this.getUserDetails();
-        String uid = user.get("uid");
-        SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.query(TABLE_FAVPRODUCT, null, " WHERE " + KEY_UID + " = '?'", new String[]{uid}, null, null, null);
-        if (cursor.moveToFirst()) {
-            do {
-                Product product = new Product();
-                product.setId(cursor.getString(1));
-                product.setName(cursor.getString(2));
-                product.setType(cursor.getString(3));
-                product.setBrand(cursor.getString(4));
-                // Adding contact to list
-                productList.add(product);
-            } while (cursor.moveToNext());
-        }
-        cursor.close();
-        return productList;
-    }
 
     public void deleteFavProduct(Product product) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -114,7 +94,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.delete(TABLE_FAVPRODUCT, null, null);
     }
 
-    // Getting contacts Count
+    // Getting favproducts Count
     public int getFavProductsCount() {
         HashMap<String, String> user = this.getUserDetails();
         String uid = user.get("uid");

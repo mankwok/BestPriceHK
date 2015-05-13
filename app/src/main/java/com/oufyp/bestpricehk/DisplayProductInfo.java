@@ -124,22 +124,32 @@ public class DisplayProductInfo extends Activity {
         if (uf.isUserLoggedIn(mContext)) {
             switch (v.getId()) {
                 case R.id.button_favourite:
-                    if (db.isFavourited(product.getId())) {
-                        // remove favourite product
-                        new AlertDialog.Builder(this)
-                                .setMessage("Remove product from favourite list? ")
-                                .setPositiveButton("REMOVE", new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int whichButton) {
-                                        removeFavourite(product);
-                                    }
-                                }).setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int whichButton) {
-                                // Do nothing.
+                    if (uf.isGoldMember(mContext) || uf.isSilverMember(mContext)) {
+                        if (db.isFavourited(product.getId())) {
+                            // remove favourite product
+                            new AlertDialog.Builder(this)
+                                    .setMessage("Remove product from favourite list? ")
+                                    .setPositiveButton("REMOVE", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int whichButton) {
+                                            removeFavourite(product);
+                                        }
+                                    }).setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int whichButton) {
+                                    // Do nothing.
+                                }
+                            }).create().show();
+                        }// add favourite product
+                        else {
+                            if (uf.isGoldMember(mContext)) {
+                                setFavourite(product);
+                            }else if(db.getFavProductsCount()>= 10){
+                                Toast.makeText(mContext,"As a silver member, you can only add at most 10 favourite products",Toast.LENGTH_SHORT).show();
+                            }else{
+                                setFavourite(product);
                             }
-                        }).create().show();
-                    }// add favourite product
-                    else {
-                        setFavourite(product);
+                        }
+                    }else{
+                        Toast.makeText(mContext,"Only silver and gold member can add favourite products",Toast.LENGTH_SHORT).show();
                     }
                     break;
                 case R.id.button_share:

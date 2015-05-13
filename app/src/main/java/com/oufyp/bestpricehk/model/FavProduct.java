@@ -34,7 +34,8 @@ public class FavProduct extends Product {
         String[] prices = this.getPrice();
         String[] storeName = {"ParknShop", "Wellcome", "Jusco", "Market Place"};
         String available = "";
-        if (prices[0].equals(prices[1]) && prices[0].equals(prices[2]) && prices[0].equals(prices[1]) && prices[0].equals("--")) {
+        if (prices[0].equals(prices[1]) && prices[0].equals(prices[2]) && prices[0].equals(prices[3]) && prices[0].equals("--")) {
+            Log.d("ALL","unavialable");
             return "Not available in all stores";
         }
         switch (displayFlag) {
@@ -67,7 +68,11 @@ public class FavProduct extends Product {
                 }
                 break;
             case 4:
-                available = "Available in " + storeName[this.getBestStore()];
+                if(this.getBestStore() != -1){
+                    available = "Available in " + storeName[this.getBestStore()];
+                }else{
+                    available = "Not available in all stores";
+                }
         }
         return available;
     }
