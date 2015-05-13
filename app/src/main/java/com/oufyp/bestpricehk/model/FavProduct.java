@@ -1,9 +1,5 @@
 package com.oufyp.bestpricehk.model;
 
-import android.util.Log;
-
-import com.oufyp.bestpricehk.R;
-
 public class FavProduct extends Product {
     private int displayFlag;
     private int qty;
@@ -35,7 +31,6 @@ public class FavProduct extends Product {
         String[] storeName = {"ParknShop", "Wellcome", "Jusco", "Market Place"};
         String available = "";
         if (prices[0].equals(prices[1]) && prices[0].equals(prices[2]) && prices[0].equals(prices[3]) && prices[0].equals("--")) {
-            Log.d("ALL","unavialable");
             return "Not available in all stores";
         }
         switch (displayFlag) {
@@ -68,9 +63,9 @@ public class FavProduct extends Product {
                 }
                 break;
             case 4:
-                if(this.getBestStore() != -1){
+                if (this.getBestStore() != -1) {
                     available = "Available in " + storeName[this.getBestStore()];
-                }else{
+                } else {
                     available = "Not available in all stores";
                 }
         }
@@ -96,20 +91,20 @@ public class FavProduct extends Product {
 
     public double getSubTotal(int displayFlag) {
         String discount = this.getDisplayDiscount(displayFlag);
-        if(!discount.equals("--")){
+        if (!discount.equals("--")) {
             try {
                 if (discount.contains("save")) {
                     int qty = this.getQty();
-                    int saveQty = Integer.parseInt(discount.substring(discount.indexOf(" ")+ 1, discount.indexOf(" ", 5)));
+                    int saveQty = Integer.parseInt(discount.substring(discount.indexOf(" ") + 1, discount.indexOf(" ", 5)));
                     double savePrice = Double.parseDouble(discount.substring(discount.indexOf("$") + 1));
-                    return (getUnitPrice(displayFlag) * qty) - ((qty/saveQty)* savePrice);
-                }else if(discount.contains("at")){
+                    return (getUnitPrice(displayFlag) * qty) - ((qty / saveQty) * savePrice);
+                } else if (discount.contains("at")) {
                     int qty = this.getQty();
-                    int saveQty = Integer.parseInt(discount.substring(discount.indexOf(" ")+ 1, discount.indexOf(" ", 5)));
+                    int saveQty = Integer.parseInt(discount.substring(discount.indexOf(" ") + 1, discount.indexOf(" ", 5)));
                     double savePrice = Double.parseDouble(discount.substring(discount.indexOf("$") + 1));
-                    return (getUnitPrice(displayFlag) * (qty % saveQty)) + ((qty/saveQty)* savePrice);
+                    return (getUnitPrice(displayFlag) * (qty % saveQty)) + ((qty / saveQty) * savePrice);
                 }
-            }catch (NumberFormatException ex){
+            } catch (NumberFormatException ex) {
                 return 0.0;
             }
         }
@@ -120,26 +115,26 @@ public class FavProduct extends Product {
         int bestStore = this.getBestStore();
         if (displayFlag < 4) {
             return this.getDiscount()[displayFlag];
-        } else if(bestStore == -1){// prodict is not available in all shop
+        } else if (bestStore == -1) {// prodict is not available in all shop
             return "--";
-        }else{
+        } else {
             return this.getDiscount()[bestStore];
         }
 
     }
 
-    public String getAvailableStores(){
+    public String getAvailableStores() {
         String[] prices = this.getPrice();
         String[] storeName = {"ParknShop", "Wellcome", "Jusco", "Market Place"};
         String availableStore = "";
         boolean first = true;
-        for(int i = 0; i < prices.length;i++){
-            if(!prices[i].equals("--")){
-                if(first){
+        for (int i = 0; i < prices.length; i++) {
+            if (!prices[i].equals("--")) {
+                if (first) {
                     availableStore += storeName[i];
                     first = false;
-                }else{
-                    availableStore += ", " +storeName[i];
+                } else {
+                    availableStore += ", " + storeName[i];
                 }
             }
 
